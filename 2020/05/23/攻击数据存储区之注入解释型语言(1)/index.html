@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8" />
+  
+  <title>攻击数据存储区之注入解释型语言(1) | Guoyanan</title>
+  <meta name="author" content="John Doe" />
+
+  
+  <meta name="description" content="一、SQL注入1、原理
+解释型语言的执行方式产生了_代码注入_的漏洞。利用这种漏洞提交含语法的句式，从而对程序进行攻击
+
+2、基本漏洞
+1. 假设有一个登陆界面，需提交用户名及密码。若已知用户名为guoyanan，则可构造guoyanan&amp;#39; --输入进用户名,程序将执行SELECT * FR" />
+  
+
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+  <meta property="og:title" content="攻击数据存储区之注入解释型语言(1)" />
+  <meta property="og:site_name" content="Guoyanan" />
+
+  
+  
+
+  
+    <meta property="og:image" content="" />
+  
+
+  
+  <link href="/css/images/favicon.ico" rel="icon" />
+  
+
+  <link rel="alternate" href="/atom.xml" title="Guoyanan" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+
+  <!-- baidu webmaster push -->
+  <script src='//push.zhanzhang.baidu.com/push.js'></script>
+
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Guoyanan</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2020-05-23T02:42:51.953Z"><a href="/2020/05/23/攻击数据存储区之注入解释型语言(1)/">2020-05-23</a></time>
+      
+      
+  
+    <h1 class="title">攻击数据存储区之注入解释型语言(1)</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h1 id="一、SQL注入"><a href="#一、SQL注入" class="headerlink" title="一、SQL注入"></a>一、SQL注入</h1><h2 id="1、原理"><a href="#1、原理" class="headerlink" title="1、原理"></a>1、原理</h2><blockquote>
+<p><strong>解释型语言的执行方式产生了_代码注入_的漏洞。利用这种漏洞提交含语法的句式，从而对程序进行攻击</strong></p>
+</blockquote>
+<h2 id="2、基本漏洞"><a href="#2、基本漏洞" class="headerlink" title="2、基本漏洞"></a>2、基本漏洞</h2><blockquote>
+<p><strong>1. 假设有一个登陆界面，需提交用户名及密码。若已知用户名为guoyanan，则可构造<code>guoyanan&#39; --</code>输入进用户名,程序将执行<code>SELECT * FROM XX WHERE  username=&#39;guoyanan&#39; -- &#39;.........,&#39;--&#39;</code>,<code>--</code>后面提交的密码会被认为是注释而被忽略，从而起到绕过登录的作用。</strong></p>
+<p>*<em>2.<code>OR 1=1 --</code>   一样可以起到这种作用，提交后，程序将执行<code>SELECT *  FROM XX WHERE username=&#39; &#39; OR 1=1 --</code>,执行的结果将会返回XX表中的所有数据 *</em></p>
+</blockquote>
+<blockquote>
+<p><strong>3.因为提交的句式的末尾会生成一个 ‘ ，我们也可以提交<code>guoyanan&#39; OR &#39;a&#39;=&#39;a</code>从而不用注释也可以平衡执行语句的引号。</strong></p>
+</blockquote>
+<h2 id="3-INSERT语句"><a href="#3-INSERT语句" class="headerlink" title="3.INSERT语句"></a>3.INSERT语句</h2><blockquote>
+<p><strong>INSERT用于创建一新行，例如<code>INSERT INTO XX (name,year,sex,isadmin) VALUE (&#39;guoyanan&#39;,19,1,0)</code>，其中isadmin代表是否具有管理员权限。</strong></p>
+<p><strong>我们可以建立一个新行，提交<code>admin&#39;,100,1,1) --</code>来创建一个具有管理员权限的帐号，若是字段中含有密码password,我们就可以随便设立一个密码，通过已知密码的管理员帐号进入数据库了。</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>另外，通过拦截到的数据库的版本字符串，把它插入自己用户资料的一个字段中；一般数据库会显示其版本信息。</strong></p>
+</blockquote>
+<blockquote>
+<p><strong>有时候我们并不知道有多少个字段，我们就可以逐个增加，从<code>guoyanan&#39;,1) --</code>到<code>guoyanan&#39;,1,1,1....) --</code>,因为大部分数据库会自动将整数转为字符串。若是1被拒绝，可以尝试200，2000之类。</strong></p>
+</blockquote>
+<h2 id="4、UPDATE语句"><a href="#4、UPDATE语句" class="headerlink" title="4、UPDATE语句"></a>4、UPDATE语句</h2><blockquote>
+<p><strong><code>UPDATE XX SET password =&#39;new-pass&#39; WHERE user=&#39;xx&#39; and password=&#39;old-pass&#39;</code>,将某一行原有某字段的值替换为新的。我们依然可以通过绕过来更新别人的密码。例如输入<code>XX&#39; --</code>，如果将注释符替换为<code>or 1=1 --</code>,那就能替换所有用户的密码了，</strong></p>
+</blockquote>
+<h2 id="5、DELETE语句"><a href="#5、DELETE语句" class="headerlink" title="5、DELETE语句"></a>5、DELETE语句</h2><blockquote>
+<p><strong>DELETE用于删除表中一个或多个行。与UPDATE类似，可以恶意破坏数据</strong></p>
+</blockquote>
+
+      
+    </div>
+    
+    <footer>
+        <div class="alignright">
+          
+          <a href='javascript:void(0)' class="share-link bdsharebuttonbox" data-cmd="more">分享</a>
+        </div>
+        
+        
+        <!-- partial('post/share') -->
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:yoursite.com">
+  </form>
+</div>
+
+  
+
+  
+<div class="widget tag">
+  <h3 class="title">Recent Posts</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/05/23/攻击数据存储区之注入解释型语言(1)/">攻击数据存储区之注入解释型语言(1)</a>
+      </li>
+    
+      <li>
+        <a href="/2020/05/23/猜数页面/">猜数页面</a>
+      </li>
+    
+      <li>
+        <a href="/2020/05/22/web总结/">web总结</a>
+      </li>
+    
+      <li>
+        <a href="/2020/05/22/bugku/">bugku</a>
+      </li>
+    
+      <li>
+        <a href="/2020/05/22/攻防进阶/">攻防进阶</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+  
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  <p>
+  
+  &copy; 2020 John Doe
+  
+  All rights reserved.</p>
+  <p>Powered by <a href="http://hexo.io/" target="_blank">Hexo</a></p>
+</div>
+<div class="clearfix"></div>
+
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"1","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script></footer>
+  <script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+<div id='bg'></div>
+</body>
+</html>
