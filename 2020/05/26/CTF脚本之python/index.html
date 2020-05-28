@@ -65,50 +65,65 @@
             <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a><em>引言</em></h1><p><strong>在CTF中有很多情况都是需要编写脚本去帮助参赛者完成工作的，而python是如今最强大的语言，其便捷性与库的多样性对于解题的帮助是非常大的。python的语法非常简单，难点在于库的使用。因此，学好重要的模块及函数，能自己写脚本，才能从脚本小子变为大佬。</strong></p>
 <hr>
 <h1 id="1、requests"><a href="#1、requests" class="headerlink" title="1、requests"></a><em>1、requests</em></h1><p><strong>requests是使用Apache2 licensed 许可证的HTTP库。它支持HTTP连接保持和连接池，支持使用cookie保持会话，支持文件上传，支持自动响应内容的编码，支持国际化的URL和POST数据自动编码。在python内置模块的基础上进行了高度的封装，从而使得python进行网络请求时，变得人性化，使用Requests可以轻而易举的完成浏览器可有的任何操作。现代，国际化，友好。</strong></p>
-<h3 id="1）、安装、导入模块"><a href="#1）、安装、导入模块" class="headerlink" title="1）、安装、导入模块"></a><em>1）、安装、导入模块</em></h3><p><code>pip install requests             //安装</code></p>
-<p><code>import requests                 //导入模块</code></p>
-<h3 id="2-、发送请求"><a href="#2-、发送请求" class="headerlink" title="2)、发送请求"></a><em>2)、发送请求</em></h3><p><code>r=requests.get(&#39;https://github.com/&#39;) //发送get请求</code></p>
-<p><code>r=requests.get(url=&#39;https://github.com/&#39;,params={&#39;value&#39;:&#39;yes&#39;})//发送带参数的get请求（params固定）</code></p>
-<p><code>r=requests.post(&#39;https://github.com/&#39;) //发送post请求</code></p>
-<p><code>r=requests.post(&#39;https://github.com/&#39;,data={&#39;value&#39;=&#39;no&#39;}) //带参数的post</code></p>
-<h3 id="3）、为url传参"><a href="#3）、为url传参" class="headerlink" title="3）、为url传参"></a><em>3）、为url传参</em></h3><p><code>url_params={&#39;value&#39;:&#39;yes&#39;}    //传参要用字典</code></p>
-<p><code>r=requests.get(&#39;https://github.com/&#39;,params=url_params)</code></p>
-<p><code>print(r.url)</code></p>
+<h3 id="1）、安装、导入模块"><a href="#1）、安装、导入模块" class="headerlink" title="1）、安装、导入模块"></a><em>1）、安装、导入模块</em></h3><p><strong><code>pip install requests             //安装</code></strong></p>
+<p><strong><code>import requests                 //导入模块</code></strong></p>
+<h3 id="2-、发送请求"><a href="#2-、发送请求" class="headerlink" title="2)、发送请求"></a><em>2)、发送请求</em></h3><p><strong><code>r=requests.get(&#39;https://github.com/&#39;) //发送get请求</code></strong></p>
+<p><strong><code>r=requests.get(url=&#39;https://github.com/&#39;,params={&#39;value&#39;:&#39;yes&#39;})//发送带参数的get请求（params固定）</code></strong></p>
+<p><strong><code>r=requests.post(&#39;https://github.com/&#39;) //发送post请求</code></strong></p>
+<p><strong><code>r=requests.post(&#39;https://github.com/&#39;,data={&#39;value&#39;=&#39;no&#39;}) //带参数的post</code></strong></p>
+<h3 id="3）、为url传参"><a href="#3）、为url传参" class="headerlink" title="3）、为url传参"></a><em>3）、为url传参</em></h3><p><strong><code>url_params={&#39;value&#39;:&#39;yes&#39;}    //传参要用字典</code></strong></p>
+<p><strong><code>r=requests.get(&#39;https://github.com/&#39;,params=url_params)</code></strong></p>
+<p><strong><code>print(r.url)</code></strong></p>
 <p><strong>得运行结果为</strong></p>
-<p><code>https://github.com/?value=yes</code></p>
-<h3 id="4）、获取相应内容"><a href="#4）、获取相应内容" class="headerlink" title="4）、获取相应内容"></a><em>4）、获取相应内容</em></h3><p><code>s=r.encoding            //获取当前编码方式</code></p>
-<p><code>r.encoding=&#39;utf-8&#39;    //设置编码方式</code></p>
-<p><code>r.text                  //返回.content编码后的内容，一般是unicode型,返回字符串</code></p>
-<p><code>r.content              //以二进制形式返回内容。有时候text可能导致乱码，可用content自行编码，例如提取图片，文件。若是中文出现乱码，可用 r.content.decode(&#39;utf-8&#39;)</code></p>
-<p><code>r.headers             //以字典对象储存响应头</code></p>
-<p><code>r.status_code         //响应状态码</code></p>
-<p><code>r.json()              //当response返回为json格式，解码并打印，否则报错</code></p>
+<p><strong><code>https://github.com/?value=yes</code></strong></p>
+<h3 id="4）、获取相应内容"><a href="#4）、获取相应内容" class="headerlink" title="4）、获取相应内容"></a><em>4）、获取相应内容</em></h3><p><strong><code>s=r.encoding            //获取当前编码方式</code></strong></p>
+<p><strong><code>r.encoding=&#39;utf-8&#39;    //设置编码方式</code></strong></p>
+<p><strong><code>r.text                  //返回.content编码后的内容，一般是unicode型,返回字符串</code></strong></p>
+<p><strong><code>r.content              //以二进制形式返回内容。有时候text可能导致乱码，可用content自行编码，例如提取图片，文件。若是中文出现乱码，可用 r.content.decode(&#39;utf-8&#39;)</code></strong></p>
+<p><strong><code>r.headers             //以字典对象储存响应头</code></strong></p>
+<p><strong><code>r.status_code         //响应状态码</code></strong></p>
+<p><strong><code>r.json()              //当response返回为json格式，解码并打印，否则报错</code></strong></p>
 <p><strong>例如发送json请求</strong></p>
-<p><code>import requests</code></p>
-<p><code>import json</code></p>
-<p><code>r=requests.post(&#39;https://github.com/&#39;,data=json.dumps({&#39;value&#39;:1}))</code></p>
-<p><code>print(r.json())</code></p>
-<h3 id="5）、自定义请求头"><a href="#5）、自定义请求头" class="headerlink" title="5）、自定义请求头"></a><em>5）、自定义请求头</em></h3><p><code>header = {&#39;user-agent&#39;: &#39;my-app/0.0.1&#39;&#39;}</code></p>
-<p><code>cookie = {&#39;value&#39;:&#39;value&#39;}</code></p>
-<p><code>r = requests.get/post(&#39;your url&#39;,headers=header,cookies=cookie)</code></p>
+<p><strong><code>import requests</code></strong></p>
+<p><strong><code>import json</code></strong></p>
+<p><strong><code>r=requests.post(&#39;https://github.com/&#39;,data=json.dumps({&#39;value&#39;:1}))</code></strong></p>
+<p><strong><code>print(r.json())</code></strong></p>
+<h3 id="5）、自定义请求头"><a href="#5）、自定义请求头" class="headerlink" title="5）、自定义请求头"></a><em>5）、自定义请求头</em></h3><p><strong><code>header = {&#39;user-agent&#39;: &#39;my-app/0.0.1&#39;&#39;}</code></strong></p>
+<p><strong><code>cookie = {&#39;value&#39;:&#39;value&#39;}</code></strong></p>
+<p><strong><code>r = requests.get/post(&#39;your url&#39;,headers=header,cookies=cookie)</code></strong></p>
 <hr>
-<p><code>headers = {&#39;content-type&#39;: &#39;application/json&#39;, &#39;User-Agent&#39;: &#39;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0&#39;}</code></p>
-<p><code>r = requests.post(&#39;https://api.github.com/some/endpoint&#39;, data=data, headers=headers)</code></p>
-<h3 id="6、响应"><a href="#6、响应" class="headerlink" title="6、响应"></a><em>6、响应</em></h3><p><code>r.headers               //返回response的头信息（字典类型）</code></p>
-<p><code>r.requests.headers     //返回请求的头信息</code></p>
-<p><code>r.cookies</code></p>
-<p><code>r.history              //返回重定向（定位到其它路径）信息,可在请求时加上allow_redirects = false 阻止重定向。例如r = requests.get(&#39;http://github.com&#39;, allow_redirects=False)</code></p>
-<h3 id="7）、设置秒数超时"><a href="#7）、设置秒数超时" class="headerlink" title="7）、设置秒数超时"></a><em>7）、设置秒数超时</em></h3><p><code>r=requests.get(url,timeout=1)</code></p>
-<h3 id="8）、设置会话对象"><a href="#8）、设置会话对象" class="headerlink" title="8）、设置会话对象"></a><em>8）、设置会话对象</em></h3><p><code>s=requests.Session()         //创建一个会话对象，能够跨请求保持某些参数</code></p>
-<p><code>s.auth=(&#39;auth&#39;,&#39;passwd)</code></p>
-<p><code>s.headers={&#39;value&#39;:&#39;value&#39;}</code></p>
-<p><code>r=s.get(&#39;url&#39;)</code></p>
-<h3 id="10）、代理"><a href="#10）、代理" class="headerlink" title="10）、代理"></a><em>10）、代理</em></h3><p><code>r=requests.get(url,proxies={&#39;http&#39;:127...,&#39;https&#39;:127...})</code></p>
-<h3 id="11）、上传文件"><a href="#11）、上传文件" class="headerlink" title="11）、上传文件"></a><em>11）、上传文件</em></h3><p><code>1、files={&#39;file&#39;:(*flag.jpg*,open(&#39;/home/1.jpg&#39;,&#39;rb&#39;))}  //传图</code></p>
-<p><code>2、files={&#39;file&#39;:(flag.txt,b&#39;flag{asdasd613as5asd13}&#39;)} //上传字符串作为文件</code></p>
-<p><code>r=requests.post(url,files=files)</code></p>
-<h3 id="12）、身份验证"><a href="#12）、身份验证" class="headerlink" title="12）、身份验证"></a><em>12）、身份验证</em></h3><p><code>r=requests.get(url,auth=HTTPBasicAuth(&#39;user&#39;,&#39;passwd&#39;)) //基本身份认证（HTTP BASIC AUTH）</code></p>
-<h3 id=""><a href="#" class="headerlink" title=""></a></h3>
+<p><strong><code>headers = {&#39;content-type&#39;: &#39;application/json&#39;, &#39;User-Agent&#39;: &#39;Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:22.0) Gecko/20100101 Firefox/22.0&#39;}</code></strong></p>
+<p><strong><code>r = requests.post(&#39;https://api.github.com/some/endpoint&#39;, data=data, headers=headers)</code></strong></p>
+<h3 id="6、响应"><a href="#6、响应" class="headerlink" title="6、响应"></a><em>6、响应</em></h3><p><strong><code>r.headers               //返回response的头信息（字典类型）</code></strong></p>
+<p><strong><code>r.requests.headers     //返回请求的头信息</code></strong></p>
+<p><strong><code>r.cookies</code></strong></p>
+<p><strong><code>r.history              //返回重定向（定位到其它路径）信息,可在请求时加上allow_redirects = false 阻止重定向。例如r = requests.get(&#39;http://github.com&#39;, allow_redirects=False)</code></strong></p>
+<h3 id="7）、设置秒数超时"><a href="#7）、设置秒数超时" class="headerlink" title="7）、设置秒数超时"></a><em>7）、设置秒数超时</em></h3><p><strong><code>r=requests.get(url,timeout=1)</code></strong></p>
+<h3 id="8）、设置会话对象"><a href="#8）、设置会话对象" class="headerlink" title="8）、设置会话对象"></a><em>8）、设置会话对象</em></h3><p><strong><code>s=requests.Session()         //创建一个会话对象，能够跨请求保持某些参数</code></strong></p>
+<p><strong><code>s.auth=(&#39;auth&#39;,&#39;passwd)</code></strong></p>
+<p><strong><code>s.headers={&#39;value&#39;:&#39;value&#39;}</code></strong></p>
+<p><strong><code>r=s.get(&#39;url&#39;)*</code></strong></p>
+<h3 id="10）、代理"><a href="#10）、代理" class="headerlink" title="10）、代理"></a><em>10）、代理</em></h3><p><strong><code>r=requests.get(url,proxies={&#39;http&#39;:127...,&#39;https&#39;:127...})</code></strong></p>
+<h3 id="11）、上传文件"><a href="#11）、上传文件" class="headerlink" title="11）、上传文件"></a><em>11）、上传文件</em></h3><p><strong><code>1、files={&#39;file&#39;:(*flag.jpg*,open(&#39;/home/1.jpg&#39;,&#39;rb&#39;))}  //传图</code></strong></p>
+<p><strong><code>2、files={&#39;file&#39;:(flag.txt,b&#39;flag{asdasd613as5asd13}&#39;)} //上传字符串作为文件</code></strong></p>
+<p><strong><code>r=requests.post(url,files=files)</code></strong></p>
+<h3 id="12）、身份验证"><a href="#12）、身份验证" class="headerlink" title="12）、身份验证"></a><em>12）、身份验证</em></h3><p><strong><code>r=requests.get(url,auth=HTTPBasicAuth(&#39;user&#39;,&#39;passwd&#39;)) //基本身份认证（HTTP BASIC AUTH）</code></strong></p>
+<h1 id="2、re标准库"><a href="#2、re标准库" class="headerlink" title="2、re标准库"></a><em>2、re标准库</em></h1><h3 id="1）、主要功能函数"><a href="#1）、主要功能函数" class="headerlink" title="1）、主要功能函数*"></a>1）、主要功能函数*</h3><p><img src="https://upload-images.jianshu.io/upload_images/10914497-4fdace367b6b714f.png?imageMogr2/auto-orient/strip%7CimageView2/2/format/webp" alt=""></p>
+<p>*<em><code>re.search(pattern,string,flags)</code>  *</em></p>
+<p><strong><code>#pattern--正则表达式的字符串或原生字符串表示，形式为r&#39;pattern&#39;</code></strong></p>
+<p><strong><code>#string--待匹配字符串</code></strong></p>
+<p><strong><code>flags--正则表达式使用时的控制标记(可省略)</code></strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/10914497-50b4f7b3d7c226a5.png?imageMogr2/auto-orient/strip%7CimageView2/2/format/webp" alt=""></p>
+<h3 id="2）、re库-的对象"><a href="#2）、re库-的对象" class="headerlink" title="2）、re库 的对象"></a><em>2）、re库 的对象</em></h3><p><strong>上面几个函数都是一次性的，但是re库还提供了一种面向对象的方法</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/5804969-14c17c4350aeb42c.png?imageMogr2/auto-orient/strip%7CimageView2/2/format/webp" alt=""></p>
+<p><strong><code>regex = re.compile(pattern, flags=0)</code> 将正则表达式的字符串形式编译成正则表达式对象<br> ∙ pattern : 正则表达式的字符串或原生字符串表示</strong><br> <strong>∙ flags : 正则表达式使用时的控制标记</strong></p>
+<p><strong><code>regex.search() :在一个字符串中搜索匹配正则表达式的第一个位置，返回match对象</code></strong></p>
+<p><strong><code>regex.match() : 从一个字符串的开始位置起匹配正则表达式，返回match对象</code></strong></p>
+<p><strong><code>regex.findall() :搜索字符串，以列表类型返回全部能匹配的子串</code></strong></p>
+<p><strong><code>regex.split() :将一个字符串按照正则表达式匹配结果进行分割，返回列表类型</code></strong></p>
+<p><strong><code>regex.finditer() :搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象</code></strong></p>
+<p><strong><code>regex.sub() :在一个字符串中替换所有匹配正则表达式的子串，返回替换后的字符串</code></strong></p>
+
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">
@@ -143,7 +158,7 @@
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1、requests"><span class="toc-number">2.</span> <span class="toc-text">1、requests</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1）、安装、导入模块"><span class="toc-number">2.0.1.</span> <span class="toc-text">1）、安装、导入模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-、发送请求"><span class="toc-number">2.0.2.</span> <span class="toc-text">2)、发送请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3）、为url传参"><span class="toc-number">2.0.3.</span> <span class="toc-text">3）、为url传参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4）、获取相应内容"><span class="toc-number">2.0.4.</span> <span class="toc-text">4）、获取相应内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5）、自定义请求头"><span class="toc-number">2.0.5.</span> <span class="toc-text">5）、自定义请求头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、响应"><span class="toc-number">2.0.6.</span> <span class="toc-text">6、响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7）、设置秒数超时"><span class="toc-number">2.0.7.</span> <span class="toc-text">7）、设置秒数超时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8）、设置会话对象"><span class="toc-number">2.0.8.</span> <span class="toc-text">8）、设置会话对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10）、代理"><span class="toc-number">2.0.9.</span> <span class="toc-text">10）、代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11）、上传文件"><span class="toc-number">2.0.10.</span> <span class="toc-text">11）、上传文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12）、身份验证"><span class="toc-number">2.0.11.</span> <span class="toc-text">12）、身份验证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#"><span class="toc-number">2.0.12.</span> <span class="toc-text"></span></a></li></ol></li></ol></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1、requests"><span class="toc-number">2.</span> <span class="toc-text">1、requests</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1）、安装、导入模块"><span class="toc-number">2.0.1.</span> <span class="toc-text">1）、安装、导入模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-、发送请求"><span class="toc-number">2.0.2.</span> <span class="toc-text">2)、发送请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3）、为url传参"><span class="toc-number">2.0.3.</span> <span class="toc-text">3）、为url传参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4）、获取相应内容"><span class="toc-number">2.0.4.</span> <span class="toc-text">4）、获取相应内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5）、自定义请求头"><span class="toc-number">2.0.5.</span> <span class="toc-text">5）、自定义请求头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、响应"><span class="toc-number">2.0.6.</span> <span class="toc-text">6、响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7）、设置秒数超时"><span class="toc-number">2.0.7.</span> <span class="toc-text">7）、设置秒数超时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8）、设置会话对象"><span class="toc-number">2.0.8.</span> <span class="toc-text">8）、设置会话对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10）、代理"><span class="toc-number">2.0.9.</span> <span class="toc-text">10）、代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11）、上传文件"><span class="toc-number">2.0.10.</span> <span class="toc-text">11）、上传文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12）、身份验证"><span class="toc-number">2.0.11.</span> <span class="toc-text">12）、身份验证</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、re标准库"><span class="toc-number">3.</span> <span class="toc-text">2、re标准库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1）、主要功能函数"><span class="toc-number">3.0.1.</span> <span class="toc-text">1）、主要功能函数*</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2）、re库-的对象"><span class="toc-number">3.0.2.</span> <span class="toc-text">2）、re库 的对象</span></a></li></ol></li></ol></li></ol>	
         </div>
     
 </div>
