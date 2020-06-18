@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>基于序列最长公共字符串（LCS）提取攻击特征 - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,前言当你凝视深渊时，深渊也在凝视你。当黑客攻击一个系统时，必然要产生流量，传递数据。虽然没有绝对安全的系统，但是可以通过收集攻击手段的特征，来对系统的薄弱点进行总结，完善。当再次遇到时，通过分析攻击,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">基于序列最长公共字符串（LCS）提取攻击特征</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">基于序列最长公共字符串（LCS）提取攻击特征</h1>
+        <div class="stuff">
+            <span>六月 18, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a><strong><em>前言</em></strong></h2><p><strong>当你凝视深渊时，深渊也在凝视你。当黑客攻击一个系统时，必然要产生流量，传递数据。虽然没有绝对安全的系统，但是可以通过收集攻击手段的特征，来对系统的薄弱点进行总结，完善。当再次遇到时，通过分析攻击手段的类别，自然可以有效地抵御这一类别的攻击。这就是攻击特征提取的意义。</strong></p>
+<p>​                    <strong>在了解特定的算法之前，先了解一下需要的基础知识：</strong></p>
+<h2 id="1、攻击行为特征提取（attack-signature-generation）"><a href="#1、攻击行为特征提取（attack-signature-generation）" class="headerlink" title="1、攻击行为特征提取（attack signature generation）"></a><strong><em>1、攻击行为特征提取（attack signature generation）</em></strong></h2><p><strong>定义：在提取目标系统及其弱点信息和攻击行为特征的基础上，模拟攻击者的入侵状态改变过程，生成攻击状态图，并给出其生成算法。</strong></p>
+<p><strong>步骤：获取异常网络流量和新攻击样本；对可疑网络数据进行聚类处理，并按类提取其攻击特征。</strong></p>
+<h2 id="2、蠕虫病毒（worm）"><a href="#2、蠕虫病毒（worm）" class="headerlink" title="2、蠕虫病毒（worm）"></a><strong><em>2、蠕虫病毒（worm）</em></strong></h2><p><strong>蠕虫是一种可以自我复制的代码，并且通过网络传播，通常无需人为干预就能传播。蠕虫病毒入侵并完全控制一台计算机之后，就会把这台机器作为宿主，进而扫描并感染其他计算机。当这些新的被蠕虫入侵的计算机被控制之后，会以这些计算机为宿主继续扫描并感染其他计算机，这种行为会一直延续下去。</strong></p>
+<h2 id="3、IDS（Intrusion-Detection-Systems）"><a href="#3、IDS（Intrusion-Detection-Systems）" class="headerlink" title="3、IDS（Intrusion Detection Systems）"></a><strong><em>3、IDS（Intrusion Detection Systems）</em></strong></h2><p><strong>IDS类似于一种监控系统，对网络、系统的运行状况进行监视，尽可能发现各种攻击企图、攻击行为或者攻击结果，以保证网络系统资源的机密性、完整性和可用性。</strong></p>
+<h2 id="4、Honeypot工具"><a href="#4、Honeypot工具" class="headerlink" title="4、Honeypot工具"></a><em>4、Honeypot工具</em></h2><p><strong>一种对攻击方进行欺骗的技术，通过布置一些作为诱饵的主机、网络服务或者信息，诱使攻击方对它们实施攻击，从而可以记录下进出计算机的所有流量，对攻击行为进行捕获和分析。了解攻击方所使用的工具与方法，推测攻击意图和动机，能够让防御方清晰地了解他们所面对的安全威胁，并通过技术和管理手段来增强实际系统的安全防护能力.</strong></p>
+<p><strong>（该工具能在Win及Red Hat Linux上运行）</strong></p>
+<h2 id="5、Honeycomb系统"><a href="#5、Honeycomb系统" class="headerlink" title="5、Honeycomb系统"></a><em>5、Honeycomb系统</em></h2><p><strong>Honeycomb系统的原理：其利用了Honeypot，Honeypot是一种用来收集入侵行为信息并学习入侵过程的工具。由于Honeypot没有向外界提供真正有价值的服务（该工具的本质是欺诈）,因此所有进出Honeypot的数据均被视为可疑数据,这样就大大减少了所需要分析的数据量。剑桥大学的Kreibich等人提出使用Honeypot来自动提取蠕虫的特征（signature）,然后将这些特征加入到现有的IDS特征库。由此形成了Honeycomb系统。</strong></p>
+<p><strong>具体做法:</strong></p>
+<p><strong>①首先对进入Honeycomb的数据包进行协议解析（指捕获和解析网络上传输的数据的过程，以便更好地了解网络上正在发生的事情。）</strong></p>
+<p><strong>我个人认为最好的是用Wireshark来抓包并分析流量，因为它可以获取多种协议的数据包，Burpsuite虽然功能强大，但仅限于Http协议。Wireshark拥有强大的解析能力，各层级都可解码。</strong></p>
+<p>​    <img src="https://s1.ax1x.com/2020/06/18/NZqni9.png" alt=""></p>
+<p><strong>②然后提取应用层数据（该层直接面向用户，如各种web应用）</strong></p>
+<p><strong>关于应用层，需要了解网络数据传输的层级划分：</strong></p>
+<p>​                                    <strong>OSI模型：（由上向下逐渐深入底层）</strong></p>
+<p><img src="https://s1.ax1x.com/2020/06/18/NeqH4H.md.png" alt=""></p>
+<p>​                                                                <strong>TCP/IP四层模型：</strong></p>
+<p><img src="C:%5CUsers%5CASUS%5CDesktop%5C0d831e2107aad2bc46bd8b7f1c29042f542.jpg" alt=""></p>
+<p><strong>③再提取出最长的相同子串，即LCS问题——最长公共子序列（Longest Common Subsequence，简称 LCS）</strong></p>
+<p><strong>④最后将这些子串作为蠕虫的特征加入到IDS的特征库中，完成学习。</strong></p>
+<p><strong>采用这种方法可以极大地减少人工操作,并且可以缩短蠕虫发生到特征提取之间的时间,有助于在初期就发现蠕虫。在试验中,他们成功地发现了Slammer蠕虫和CodeRed II蠕虫的特征。</strong></p>
+<h2 id="6、LCS问题的求解-核心"><a href="#6、LCS问题的求解-核心" class="headerlink" title="6、LCS问题的求解(核心)"></a><em>6、LCS问题的求解(核心)</em></h2><p><strong>一个序列S任意删除若干个字符得到新序列T，则T叫做S的子序列；</strong></p>
+<p><strong>两个序列X和Y的公共子序列(不需要连续)中，长度最长的那个，定义为X和Y的最长公共子序列。</strong></p>
+<p><strong>①暴力求解（仅适用于较短的序列）：</strong></p>
+<p><strong>用枚举的方法将两个序列的所有子序列枚举出来，进行对比之后，选出相同的，再在相同的序列中找最大的。</strong></p>
+<p><strong>这个方法效率太低，不考虑。</strong></p>
+<p><strong>②动态规划</strong></p>
+<p><strong>有两个序列：</strong></p>
+<p><strong>X=&lt;x<sub>1</sub>,x<sub>2</sub>,x<sub>3</sub>,x<sub>4</sub>….,x<sub>m</sub>&gt;,Y=&lt;y<sub>1</sub>,y<sub>2</sub>,y<sub>3</sub>,y<sub>4</sub>….,y<sub>m</sub>&gt;</strong></p>
+<p> <strong>Z=&lt;z<sub>1</sub>,z<sub>2</sub>,z<sub>3</sub>,z<sub>4</sub>….,z<sub>m</sub>&gt;</strong></p>
+<p><strong>经过分析，我们可以知道：</strong></p>
+<p><strong>1、如果x<sub>m</sub>=y<sub>n</sub>,则z<sub>k</sub>=x<sub>m</sub>=y<sub>n</sub>且Z<sub>k-1</sub>是X<sub>m-1</sub>和Y<sub>n-1</sub>的一个LCS</strong></p>
+<p><strong>2、如果x<sub>m</sub>!=y<sub>n</sub>,且z<sub>k</sub>!=x<sub>m</sub>则Z是X<sub>m-1</sub>和Y<sub>n</sub>的一个LCS</strong></p>
+<p><strong>3、如果x<sub>m</sub>!=y<sub>n</sub>,且z<sub>k</sub>!=y<sub>n</sub>则Z是X<sub>m</sub>和Y<sub>n-1</sub>的一个LCS</strong></p>
+<p><strong>(将问题拆分为子问题)</strong></p>
+<p><strong>用一个二维数组C[i][j]表示X前i个字符，Y中前j个字符的LCS的长度，可以得到以下公式：</strong></p>
+<p><img src="file:///C:%5CUsers%5CASUS%5CAppData%5CLocal%5CTemp%5Cksohtml%5Cwps4E21.tmp.jpg" alt="img"> </p>
+<p><strong>初始条件，当然长度是0（任何字符串与空串的LCS等于0）。</strong></p>
+<p><strong>其它情况：</strong></p>
+<p><strong>当X的第i个字符与Y的第j个相同时，令LCS的长度+1；</strong></p>
+<p><strong>当不同时，LCS的长度就是MAX(X<sub>i-1</sub>Y<sub>j</sub>的LCS的长度,X<sub>i</sub>Y<sub>j-1</sub>的LCS的长度)。</strong></p>
+<p><strong>以ABCB以及BDCA的LCS长度为例：</strong></p>
+<p><strong>让C[][]按照该方法去计算长度，原理如下图：</strong></p>
+<p><strong>（关于填表过程的图片为转载，来源为CSDN博主z-k）</strong></p>
+<p><img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143639190.png" alt="image-20200618143639190">)<img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143651674.png" alt="image-20200618143651674">)<img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143703346.png" alt="image-20200618143703346"></p>
+<p><img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143728142.png" alt="image-20200618143728142">)<img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143739061.png" alt="image-20200618143739061">)<img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143750291.png" alt="image-20200618143750291"></p>
+<p><img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143837475.png" alt="image-20200618143837475">)<img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143847067.png" alt="image-20200618143847067">)<img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143858058.png" alt="image-20200618143858058"></p>
+<p><img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143916130.png" alt="image-20200618143916130">)<img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143925149.png" alt="image-20200618143925149">)<img src="C:%5CUsers%5CASUS%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200618143933261.png" alt="image-20200618143933261"></p>
+<p><strong>所以得出LCS长度为2</strong></p>
+<p><strong>对LCS的内容进行打印：</strong></p>
+<p><strong>递归：</strong></p>
+<p><code>void LCS_prt(int i,int j)</code></p>
+<p><code>{</code></p>
+<p> <code>if(i==0||j==0)     *//递归边界条件*</code></p>
+<p><code>{</code></p>
+<p><code>return ;</code></p>
+<p><code>}</code></p>
+<p><code>if(c[i][j]==1)     *//当Xi==Yj时令C[i][j]=1</code>*</p>
+<p>  <code>{</code></p>
+<p><code>LCS_prt(i-1,j-1);</code></p>
+<p><code>cout&lt;&lt;x[i-1];</code></p>
+<p> <code>}</code></p>
+<p> <code>else if(c[i][j]==2)   *//当Xi！=Yj，且LCS(i-1,j)更大时，令C[i][j]=2</code>*</p>
+<p> <code>{</code></p>
+<p>  <code>LCS_prt(i-1,j);</code></p>
+<p><code>}</code></p>
+<p><code>else if(c[i][j]==3)   *//当Xi！=Yj，且LCS(i,j-1)更大时，令C[i][j]=3</code>*</p>
+<p><code>{</code></p>
+<p> <code>LCS_prt(i,j-1);</code></p>
+<p> <code>}</code></p>
+<p><code>}</code></p>
+<p><strong>非递归：</strong></p>
+<p><code>stack&lt;char&gt; lcs;          *//声明一个栈存储LCS字符</code>*</p>
+<p><code>for(int i = m-1,j = n-1;i &gt;= 0 &amp;&amp; j &gt;= 0; )</code></p>
+<p><code>{</code></p>
+<p>​    <code>if(c[i][j] == 1)</code></p>
+<p><code>{</code></p>
+<p>  <code>i--;</code></p>
+<p> <code>j--;</code></p>
+<p> <code>lcs.push(X[i]);       *//满足条件1，将该字符压入栈中</code>*</p>
+<p><code>}</code></p>
+<p>  <code>else if(c[i][j] == 2)      *//条件2，3，化为子问题</code>*</p>
+<p><code>i--;</code></p>
+<p><code>else</code></p>
+<p>   <code>j--;</code></p>
+<p><code>}</code></p>
+<p><code>while(!lcs.empty())         *//循环打印</code>*</p>
+<p><code>{</code></p>
+<p><code>cout&lt;&lt;lcs.top();        *//打印LCS栈顶元素*</code></p>
+<p> <code>lcs.pop();           *//删除LCS栈顶元素</code>*</p>
+<p><code>}</code></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1、攻击行为特征提取（attack-signature-generation）"><span class="toc-number">2.</span> <span class="toc-text">1、攻击行为特征提取（attack signature generation）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、蠕虫病毒（worm）"><span class="toc-number">3.</span> <span class="toc-text">2、蠕虫病毒（worm）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、IDS（Intrusion-Detection-Systems）"><span class="toc-number">4.</span> <span class="toc-text">3、IDS（Intrusion Detection Systems）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、Honeypot工具"><span class="toc-number">5.</span> <span class="toc-text">4、Honeypot工具</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、Honeycomb系统"><span class="toc-number">6.</span> <span class="toc-text">5、Honeycomb系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、LCS问题的求解-核心"><span class="toc-number">7.</span> <span class="toc-text">6、LCS问题的求解(核心)</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
