@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHP代码审计中的常见函数 - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,1、isset()检测变量是否设置，并且不是 NULL。如果已经使用 unset() 释放了一个变量之后，它将不再是 isset()。
+若使用 isset() 测试一个被设置成 NULL 的变量，将,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">PHP代码审计中的常见函数</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">PHP代码审计中的常见函数</h1>
+        <div class="stuff">
+            <span>六月 23, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="1、isset"><a href="#1、isset" class="headerlink" title="1、isset()"></a>1、isset()</h2><p><strong><em>检测变量是否设置，并且不是 NULL。<br>如果已经使用 unset() 释放了一个变量之后，它将不再是 isset()。</em></strong></p>
+<p><strong><em>若使用 isset() 测试一个被设置成 NULL 的变量，将返回 FALSE。同时要注意的是一个 NULL 字节（”\0”）并不等同于 PHP 的 NULL 常数。</em></strong></p>
+<p><code>isset($a,$b.....)</code>   <strong><em>#返回BOOL</em></strong></p>
+<h2 id="2、in-array"><a href="#2、in-array" class="headerlink" title="2、in_array()"></a>2、in_array()</h2><p><strong><em>in_array() 函数搜索数组中是否存在指定的值。</em></strong></p>
+<p><code>in_array(search,array,type)</code> <strong><em>#返回BOOL</em></strong></p>
+<p>​    <strong><em>search(必需)：规定要在数组搜索的值。</em></strong></p>
+<p>​    <strong><em>array(必需)：规定要搜索的数组。</em></strong></p>
+<p>​    <strong><em>type(可选)：检查搜索的数据与数组的值的类型是否相同。</em></strong></p>
+<p><strong><em>（注意：未加type时是弱类型检验，即“1”==1可通过检验，这会导致漏洞）</em></strong></p>
+<h2 id="3、mb-substr"><a href="#3、mb-substr" class="headerlink" title="3、mb_substr()"></a>3、mb_substr()</h2><p><code>echo mb_substr(&quot;guoyanan&quot;, 0, 2); // 输出：gu</code></p>
+<p><code>mb_substr(str,start,length,encoding)</code></p>
+<p><strong><em>str:必需。从该 string 中提取子字符串。</em></strong></p>
+<p><strong><em>start:必需。规定在字符串的何处开始。</em></strong></p>
+<p><strong><em>length:可选。规定要返回的字符串长度。默认是直到字符串的结尾。</em></strong></p>
+<p><strong><em>encoding:可选。字符编码。如果省略，则使用内部字符编码.</em></strong></p>
+<h2 id="4、mb-strpos"><a href="#4、mb-strpos" class="headerlink" title="4、mb_strpos()"></a>4、mb_strpos()</h2><p><strong><em>mb_strpos()：返回要查找的字符串在别一个字符串中首次出现的位置</em></strong></p>
+<p><code>mb_strpos (haystack ,needle )</code></p>
+<p><strong><em>haystack：要被检查的字符串。</em></strong></p>
+<p><strong><em>needle：要搜索的字符串。</em></strong></p>
+<p><strong><em>若不存在，返回BOOL（FALSE）</em></strong></p>
+<h2 id="5、-REQUEST-‘-‘"><a href="#5、-REQUEST-‘-‘" class="headerlink" title="5、$_REQUEST [‘  ‘]"></a>5、<strong>$_REQUEST</strong> [‘  ‘]</h2><p><strong><em>php中$_REQUEST可以获取以POST方法和GET方法提交的数据，缺点：速度比较慢 。</em></strong></p>
+<p><strong><em>补充：</em></strong></p>
+<p><strong>一. get与post请求的不同</strong><br><strong><em>GET方提交数据的特点：</em></strong></p>
+<p>​    \1. get方式在url后面拼接参数，只能以文本的形式传递数据</p>
+<p>​    \2. 传递的数据量小，4KB左右（不同浏览器会有差异）</p>
+<p>​    \3. 安全性低，会将数据显示在地址栏</p>
+<p>​    \4. 速度快，通常用于对安全性要求不高的请求</p>
+<p><strong><em>post 方式</em></strong></p>
+<p>​    1-安全性比较高</p>
+<p>​    2-传递数据量大，请求对数据长度没有要求</p>
+<p>​    3-请求不会被缓存，也不会保留在浏览器历史记录中</p>
+<p>​    用于：密码等安全性要求比较高的场合，提交的数据量比较大：发布文章，上传文件。</p>
+<p><strong>二. $_GET获取get数据</strong><br><strong><em>GET方式提交数据的格式</em></strong></p>
+<p>​    \1. 格式:index.php?userName=jack&amp;password=123<br>​    \2. 参数名与参数值之间没有空格</p>
+<p>​    \3. 参数值不需要使用单双引号包括</p>
+<p><strong><em>三. $_POST获取post数</em></strong><br>    表单数据是通过请求体传递到服务端的<br>    我们在界面上看不到<br>    可以提交任何类型的数据，包括文件由于界面上看不见，浏览器也不储存，所以更安全</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、isset"><span class="toc-number">1.</span> <span class="toc-text">1、isset()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、in-array"><span class="toc-number">2.</span> <span class="toc-text">2、in_array()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、mb-substr"><span class="toc-number">3.</span> <span class="toc-text">3、mb_substr()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、mb-strpos"><span class="toc-number">4.</span> <span class="toc-text">4、mb_strpos()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、-REQUEST-‘-‘"><span class="toc-number">5.</span> <span class="toc-text">5、$_REQUEST [‘  ‘]</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

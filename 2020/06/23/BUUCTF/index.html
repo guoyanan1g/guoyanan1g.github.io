@@ -1,0 +1,198 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BUUCTF - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,1、HCTF2018 Warm up开始点进去是一张图片，F12发现有一个“source.php”,于是在URL里输入。
+得到PHP代码，显然是一道代码审计题
+先看主体，
+
+要关注的就是类里面的函数,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">BUUCTF</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">BUUCTF</h1>
+        <div class="stuff">
+            <span>六月 23, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="1、HCTF2018-Warm-up"><a href="#1、HCTF2018-Warm-up" class="headerlink" title="1、HCTF2018 Warm up"></a>1、HCTF2018 Warm up</h2><p><strong>开始点进去是一张图片，F12发现有一个“source.php”,于是在URL里输入。</strong></p>
+<p><strong>得到PHP代码，显然是一道代码审计题</strong></p>
+<p><strong>先看主体，</strong></p>
+<p><img src="https://s1.ax1x.com/2020/06/23/NU70qf.md.png" alt=""></p>
+<p><strong>要关注的就是类里面的函数返回值是否为1；</strong></p>
+<p><img src="https://s1.ax1x.com/2020/06/23/NU7bW9.md.png" alt=""></p>
+<p><strong>分析这个类：</strong></p>
+<p><strong>首先，可以知道目录下有两个文件，source.php和hint.php,我先查看下hint.php;</strong></p>
+<p><img src="https://s1.ax1x.com/2020/06/23/NUHcTO.md.png" alt=""></p>
+<p><strong>这说明flag应该在一个叫ffffllllaaaagggg的文件里，我们还是先看代码。</strong></p>
+<p><strong>重点关注in_array函数，因为传入的实参数FILE（是一个文件），要被包含在这两个PHP文件的数组中，所以FILE的值肯定包含一个source.php  或  hint.php;可以先给它赋值file=source.php,我们再接着看，是对传形参page处理后赋值给 _page，再判断是否存在，这个mb_substr一部分的意思实际上就是把file中第一个问号之前的值，截取赋值。</strong></p>
+<p><strong>然后是一个urldecode，’?’的编码是%3f,也就是说，如果正常来看，我们把file赋值source.php%3f后，它解码后会变成source.php?,<code>(这里有一个比较冷的知识，因为题目环境是Linux的服务器，在Linux环境下，文件夹的名字是可以带问号的，所以%3f即可。但如果环境是Windows的话就必须二次编码了，即source.php%253f)</code></strong></p>
+<p><strong>审计完，其实大意就是让传一个FILE=source.php%3f/…../，但是又要涉及ffffllllaaaagggg这个文件，文件夹里怎么包含文件？。其实这就是%3的作用，<code>它让url以为这是一个文件夹而不是文件，但因为本来没有这个目录，所以系统会忽略它，再模拟创建一个目录，再向上穿透！！如果是xxx.php?的话，就无法识别。当然，其实任意目录名都可以让它发生穿透（除了文件名）</code></strong></p>
+<p><strong>最后，我们可以试试不同路径。已知目录名为source.php%3f,我们构造GET请求，从  source.php%3f/../ffffllllaaaagggg开始试，一直到/../../../../，就成功了！</strong></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、HCTF2018-Warm-up"><span class="toc-number">1.</span> <span class="toc-text">1、HCTF2018 Warm up</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>

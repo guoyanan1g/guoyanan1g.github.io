@@ -181,6 +181,34 @@
 <p><strong><code>&#39; or if(database=&#39;happy&#39;,sleep(3),0)</code></strong></p>
 <p><strong>(若查询结果正确，则延迟3秒，否则无延时</strong></p>
 </blockquote>
+<h2 id="10、堆叠注入"><a href="#10、堆叠注入" class="headerlink" title="10、堆叠注入"></a>10、堆叠注入</h2><blockquote>
+<p><strong>在正常的语句后面加分号（；），可顺序执行多条语句，从而造成注入漏洞。适用于UNION被过滤的情况但只返回一个结果。</strong></p>
+</blockquote>
+<h2 id="11、重要语句"><a href="#11、重要语句" class="headerlink" title="11、重要语句"></a>11、重要语句</h2><blockquote>
+<p><strong>显示所有数据库</strong></p>
+<ul>
+<li><code>show databases</code></li>
+</ul>
+<p><strong>显示所有表</strong></p>
+<ul>
+<li><code>show tables</code></li>
+</ul>
+<p><strong>显示表的列的信息</strong></p>
+<ul>
+<li><code>show columns from table_name</code></li>
+<li><code>desc table_name</code></li>
+<li><code>select * from information_schema.columns where table_schema=&quot;&quot; and table_name=&quot;&quot;</code></li>
+</ul>
+<p><strong>更改表的名字</strong></p>
+<ul>
+<li><code>RENAME TABLE tbl_name TO new_tbl_name[, tbl_name2 TO new_tbl_name2,...]</code></li>
+<li><code>alter table table_name to new name</code></li>
+</ul>
+<p><strong>更改字段的名字</strong></p>
+<ul>
+<li><code>alter table t_app change name app_name varchar(20) not null;</code></li>
+</ul>
+</blockquote>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
@@ -216,7 +244,7 @@
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、SQL注入"><span class="toc-number">1.</span> <span class="toc-text">一、SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、原理"><span class="toc-number">1.1.</span> <span class="toc-text">1、原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、基本漏洞"><span class="toc-number">1.2.</span> <span class="toc-text">2、基本漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-INSERT语句"><span class="toc-number">1.3.</span> <span class="toc-text">3.INSERT语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、UPDATE语句"><span class="toc-number">1.4.</span> <span class="toc-text">4、UPDATE语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、DELETE语句"><span class="toc-number">1.5.</span> <span class="toc-text">5、DELETE语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、联合查询"><span class="toc-number">1.6.</span> <span class="toc-text">6、联合查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、报错注入"><span class="toc-number">1.7.</span> <span class="toc-text">7、报错注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8、布尔盲注"><span class="toc-number">1.8.</span> <span class="toc-text">8、布尔盲注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9、时间盲注"><span class="toc-number">1.9.</span> <span class="toc-text">9、时间盲注</span></a></li></ol></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、SQL注入"><span class="toc-number">1.</span> <span class="toc-text">一、SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、原理"><span class="toc-number">1.1.</span> <span class="toc-text">1、原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、基本漏洞"><span class="toc-number">1.2.</span> <span class="toc-text">2、基本漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-INSERT语句"><span class="toc-number">1.3.</span> <span class="toc-text">3.INSERT语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、UPDATE语句"><span class="toc-number">1.4.</span> <span class="toc-text">4、UPDATE语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、DELETE语句"><span class="toc-number">1.5.</span> <span class="toc-text">5、DELETE语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、联合查询"><span class="toc-number">1.6.</span> <span class="toc-text">6、联合查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、报错注入"><span class="toc-number">1.7.</span> <span class="toc-text">7、报错注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8、布尔盲注"><span class="toc-number">1.8.</span> <span class="toc-text">8、布尔盲注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9、时间盲注"><span class="toc-number">1.9.</span> <span class="toc-text">9、时间盲注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10、堆叠注入"><span class="toc-number">1.10.</span> <span class="toc-text">10、堆叠注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11、重要语句"><span class="toc-number">1.11.</span> <span class="toc-text">11、重要语句</span></a></li></ol></li></ol>	
         </div>
     
 </div>
