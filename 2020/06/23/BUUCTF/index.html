@@ -80,6 +80,35 @@
 <p><strong>然后是一个urldecode，’?’的编码是%3f,也就是说，如果正常来看，我们把file赋值source.php%3f后，它解码后会变成source.php?,<code>(这里有一个比较冷的知识，因为题目环境是Linux的服务器，在Linux环境下，文件夹的名字是可以带问号的，所以%3f即可。但如果环境是Windows的话就必须二次编码了，即source.php%253f)</code></strong></p>
 <p><strong>审计完，其实大意就是让传一个FILE=source.php%3f/…../，但是又要涉及ffffllllaaaagggg这个文件，文件夹里怎么包含文件？。其实这就是%3的作用，<code>它让url以为这是一个文件夹而不是文件，但因为本来没有这个目录，所以系统会忽略它，再模拟创建一个目录，再向上穿透！！如果是xxx.php?的话，就无法识别。当然，其实任意目录名都可以让它发生穿透（除了文件名）</code></strong></p>
 <p><strong>最后，我们可以试试不同路径。已知目录名为source.php%3f,我们构造GET请求，从  source.php%3f/../ffffllllaaaagggg开始试，一直到/../../../../，就成功了！</strong></p>
+<h2 id="2、随便注"><a href="#2、随便注" class="headerlink" title="2、随便注"></a>2、随便注</h2><p><strong>看见了一个可以提交数据的框，应该是SQL注入，点击一下，果然是</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UYF71H.md.png" alt=""></p>
+<p><strong>输入2，再查询一下,有反馈</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UYkU8e.md.png" alt=""></p>
+<p><strong>输入3,4等数，没有回显，说明字段应该是两个（或者ORDER BY）</strong></p>
+<p><strong>发现#并没有被过滤</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UYAtZq.md.png" alt=""></p>
+<p><strong>然后开始常规操作。如果你尝试采用UNION注入的话，你会发现被过滤了,因此要采用堆叠注入</strong></p>
+<p><strong>把数据库，表名都显现出来</strong>：</p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UYA5Se.md.png" alt=""></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UYAqTP.md.png" alt=""></p>
+<p><strong>得到了两个表，下面查下他们的字段</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UYELu9.md.png" alt=""></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UYZfYV.md.png" alt=""></p>
+<p><strong>我们发现words表中是二维的，而1919……14表中是一维的，因此默认回显的表是words，但flag字段在1919表中，我们得让该表的flag字段内容回显</strong></p>
+<p><strong>把表的名字改一下，即把words改为其它，把1919改为words，再把flag字段改为id</strong></p>
+<p><strong><code>输入   1&#39;;rename words to w;rename 1919....14 to words;alter table words change flag id varchar(100);#</code></strong></p>
+<p><strong>再输入<code>1&#39; or 1=1#</code>即可得到flag</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UYm0Kg.md.png" alt=""></p>
+<h2 id="3、EasySQL"><a href="#3、EasySQL" class="headerlink" title="3、EasySQL"></a>3、EasySQL</h2><p><strong>又是一道SQL注入题；先输个1</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UY3mct.png" alt=""></p>
+<p><strong>再输入<code>1&#39;</code>，没有回显，说明 ‘ 可能被过滤了</strong></p>
+<p><strong>这题很显然也不能采用联合注入，因为你提交的字符串会被当做flag，于是想到堆叠注入，来看下表</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/13/UY3WDK.png" alt=""></p>
+<p><strong>发现有一个表应该有flag，但是尝试了几个语句并没法让它打印出表内容。于是搜了下wp，才得知比赛过程中放出了源码。<code>select $_GET[&#39;query&#39;] || flag from flag</code></strong></p>
+<p><strong>这句代码就是处理我们提交数据的语句。||在这里是‘或’的用法，那么，怎么才能让该语句执行到后面呢？百度了一下，得知MySQL里有一个<code>sqlmode(是一组mysql支持的基本语法及校验规则)</code>,于是可以通过修改规则来执行语句，sqlmode里有一个<code>PIPES_AS_CONCAT:</code><br> <code>将“||”视为字符串的连接操作符而非或运算符，这和Oracle数据库是一样的，也和字符串的拼接函数Concat相类似</code></strong></p>
+<hr>
+<p><strong>于是我们可以输入<code>1;set sql_mode=PIPES_AS_CONCAT;select 1</code>,这样系统会先修改规则，再将 <code>select 1</code> 和 <code>select flag from flag</code> 的结果拼接在一起，打印出flag</strong></p>
+<h2 id="4、EasySQL-极客大挑战"><a href="#4、EasySQL-极客大挑战" class="headerlink" title="4、EasySQL(极客大挑战)"></a>4、EasySQL(极客大挑战)</h2><p><strong>这题确实够easy，直接admin加万能语句拿到flag</strong></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
@@ -115,7 +144,7 @@
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、HCTF2018-Warm-up"><span class="toc-number">1.</span> <span class="toc-text">1、HCTF2018 Warm up</span></a></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、HCTF2018-Warm-up"><span class="toc-number">1.</span> <span class="toc-text">1、HCTF2018 Warm up</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、随便注"><span class="toc-number">2.</span> <span class="toc-text">2、随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、EasySQL"><span class="toc-number">3.</span> <span class="toc-text">3、EasySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、EasySQL-极客大挑战"><span class="toc-number">4.</span> <span class="toc-text">4、EasySQL(极客大挑战)</span></a></li></ol>	
         </div>
     
 </div>

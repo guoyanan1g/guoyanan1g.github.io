@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Docker技术详解 - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,
+​                                                “Docker就像一只鲸鱼，驮着大大小小的箱子”
+1. Docker的成因（一次构建，处处运行）
+,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">Docker技术详解</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">Docker技术详解</h1>
+        <div class="stuff">
+            <span>七月 22, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p><img src="https://s1.ax1x.com/2020/07/22/UHLTKS.png" alt=""></p>
+<p>​                                                <strong>“Docker就像一只鲸鱼，驮着大大小小的箱子”</strong></p>
+<h2 id="1-Docker的成因"><a href="#1-Docker的成因" class="headerlink" title="1. Docker的成因"></a>1. Docker的成因</h2><p><strong>（一次构建，处处运行）</strong></p>
+<p>​    <strong>一款软件在投入市场的过程中，要经历开发，测试，运维等一系列过程。</strong></p>
+<p>​     <strong>如果抱着 “代码即应用” 的想法，就会导致很多问题。例如在开发一款软件时，在开发者的机器上运行很好，但在运维的机器上可能就会出现各种各样的问题，然后两者互相甩锅，互相指责。这是由于环境，配置等多种因素导致的。那么，环境的问题如何解决？总不能每台机器上都安装一遍吧？就算解决了配置，那万一是跨平台的应用又如何解决？</strong></p>
+<p>​     <strong>于是，镜像的概念诞生了。就如同你要搬家，若是要还原原来的居住状态，你可以直接把整栋楼搬过去，这样直接就能进去住，家具，装修的事情不需要考虑了。类似的，Docker即采用了镜像技术，打破“代码即应用”的观念，从系统到环境，全部打包，完全复制，从而实现跨平台的无缝接轨运行！</strong></p>
+<h2 id="2-Docker是什么"><a href="#2-Docker是什么" class="headerlink" title="2. Docker是什么"></a>2. Docker是什么</h2><p><strong>Docker是基于Go语言实现的云开源项目，是一个管理容器的引擎</strong></p>
+<p><strong>目标：Build , Ship ,  Run  any APP , Anywhere   构建封装，处处运行</strong></p>
+<p><strong>解决了运行环境和配置问题软件容器，方便做持续集成并有助于整体发布的容器虚拟化技术</strong></p>
+<p><strong>参考了虚拟机技术，但Docker无需虚拟化硬件资源。启动时间快，步骤相对简洁，占用资源小，因此成为主流</strong></p>
+<p><strong>由于虚拟机的不足，Linux发展出另外一种虚拟化技术：Linux容器（LXC）。它不是模拟一个完整的操作系统，而是对进程进行隔离，它只需要某个软件工作所需的库资源和设置，因此变得轻量高效。而Docker，则是管理这种东西的一个引擎</strong></p>
+<p>​                                               </p>
+<p>​                                                             <strong><em>一张图总结docker</em></strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/22/UHyY0e.png" alt=""></p>
+<h2 id="3-Docker安装"><a href="#3-Docker安装" class="headerlink" title="3. Docker安装"></a>3. Docker安装</h2><p><strong>以CentOS上为例：</strong></p>
+<p><strong>支持CentOS 7(64)  ;  系统内核版本3.10以上</strong></p>
+<p><strong>CentOS 6.5(64)或更高版本；系统内核2.6.32-431或更高版本</strong></p>
+<p><strong>仅发行版本的内核支持Docker</strong></p>
+<p><strong>查看内核：<code>uname -r</code></strong></p>
+<p><strong>查看版本：<code>cat /etc/redhat-release</code></strong></p>
+<p><strong>以CentOS7为例：</strong></p>
+<p><strong>1、检测之前版本   <code>docker --version</code></strong></p>
+<p><strong>2、若是之前有旧版本，那么卸载它们：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-engine</span><br></pre></td></tr></table></figure>
+
+<p><strong>3、若是没有检测到，直接开始安装</strong></p>
+<p><strong>绝大多数用户会采用using repository的方式，因为比较方便，现在按这个方式安装，具体可参考docker官网，写的很详细</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">安装包：</span><br><span class="line">$ sudo yum install -y yum-utils device-mapper-persistent-data lvm2</span><br><span class="line"></span><br><span class="line">安装库：</span><br><span class="line">$ sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https:&#x2F;&#x2F;download.docker.com&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo</span><br><span class="line">    (友情提示：由于这个网站是国外的，又因为有某个伟大技术的存在，所以这个效果可能时好时坏，可以把里面的url换成https:&#x2F;&#x2F;mirrors.aliyun.com&#x2F;docker-ce&#x2F;linux&#x2F;centos&#x2F;docker-ce.repo)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">下面几个是一些额外选项（可以忽略）：</span><br><span class="line">$ sudo yum-config-manager --enable docker-ce-nightly</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum-config-manager --enable docker-ce-test</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum-config-manager --disable docker-ce-nightly</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">若是想安装特定版本：</span><br><span class="line">$ yum list docker-ce --showduplicates | sort -r</span><br><span class="line"></span><br><span class="line">docker-ce.x86_64  3:18.09.1-3.el7                     docker-ce-stable</span><br><span class="line">docker-ce.x86_64  3:18.09.0-3.el7                     docker-ce-stable</span><br><span class="line">docker-ce.x86_64  18.06.1.ce-3.el7                    docker-ce-stable</span><br><span class="line">docker-ce.x86_64  18.06.0.ce-3.el7                    docker-ce-stable</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">接着：</span><br><span class="line">$ sudo yum install docker-ce-&lt;VERSION_STRING&gt; docker-ce-cli-&lt;VERSION_STRING&gt; containerd.io</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">安装完后，启动docker：</span><br><span class="line">$ sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">检验是否安装完好：</span><br><span class="line">$ sudo docker run hello-world</span><br></pre></td></tr></table></figure>
+
+<p><strong><em>补充：</em></strong></p>
+<p><strong>①</strong></p>
+<p><strong>在用CentOS 7进行相关操作时，要用到sudo权限，但有时候会显示“xxx（你的用户名）不在sudoers中，此事将被报告”。这是由于该用户并没有获得权限。我们需要编辑一下。</strong></p>
+<p><strong>首先，登入root。<code>su --login</code></strong></p>
+<p><strong>更改sudoers文件读写权限。<code>chmod 777 sudoers</code></strong></p>
+<p><strong>切换到sudoers所在文件夹。<code>cd /etc</code></strong></p>
+<p><strong>然后用vim对其编辑。<code>vim sudoers</code></strong></p>
+<p><strong>找到<code># Allow root to run.........</code>这一行，在<code>root  ALL=...</code>下面添加一句<code>XXX  ALL=...(后面与上面相同)</code>,再按esc，输入<code>:wq</code>保存并退出vim</strong></p>
+<p><strong>再把sudoers文件权限改为只读，<code>chmod 444 sudoers</code></strong></p>
+<p><strong>②</strong></p>
+<p><strong>为了解决上面提到的下载源的问题，我们可以把默认的镜像仓库源设置为阿里云的源。</strong></p>
+<p><code>https://cr.console.aliyun.com/cn-hangzhou/instances/mirrors</code></p>
+<p><strong>在这个网站进行注册，获取自己的个人镜像加速器。按照操作文档去修改json文件即可</strong></p>
+<h2 id="4-Docker三大要素"><a href="#4-Docker三大要素" class="headerlink" title="4. Docker三大要素"></a>4. Docker三大要素</h2><h3 id="①镜像（image）"><a href="#①镜像（image）" class="headerlink" title="①镜像（image）"></a><em>①镜像（image）</em></h3><p><strong>镜像是一个<code>只读</code>的模板。可以用来创建Docker容器。一个镜像可以创建多个容器，每个镜像有不同的tag。</strong></p>
+<h3 id="②容器-container"><a href="#②容器-container" class="headerlink" title="②容器(container)"></a><em>②容器(container)</em></h3><p><strong>容器可以看做一个对象，镜像则是一个类。<code>容器是镜像构建的一个运行实例</code></strong></p>
+<h3 id="③仓库-repository"><a href="#③仓库-repository" class="headerlink" title="③仓库(repository)"></a><em>③仓库(repository)</em></h3><p><strong>集中存放<code>镜像文件</code>的场所，国内的如阿里云，网易云等</strong></p>
+<p><strong>最大的公开仓库是Docker Hub（是不是感觉某些东西一下子理解了）</strong></p>
+<p><strong>理解了这些，也就理解了Docker，他是一个容器运行载体。我们将程序以及依赖的环境打包成一个镜像，通过镜像来生成Docker容器。当我们需要时，就可以通过docker客户端创建一个实例，即一个容器。</strong></p>
+<h2 id="5-Docker运行实例"><a href="#5-Docker运行实例" class="headerlink" title="5. Docker运行实例"></a>5. Docker运行实例</h2><p> <strong>我们来运行一个名为“hello-world”的镜像,输入命令<code>docker run hello-world</code></strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/20/U4RxzT.png" alt=""></p>
+<p><strong>当你运行一个实例时，若是本地有镜像，则直接产生一个实例。若是没有，则通过/etc/docker下的daemon文件链接到镜像源，从服务器的仓库上寻找，找到则下载镜像，运行实例，未找到则运行失败。</strong></p>
+<h2 id="6-容器命令"><a href="#6-容器命令" class="headerlink" title="6. 容器命令"></a>6. 容器命令</h2><p><strong>新建并启动容器：<code>docker run [OPTIONS]IMAGE[COMMAND][ARG...]</code></strong></p>
+<p><strong>查询镜像： <code>docker search xxx</code></strong></p>
+<p><strong>下载镜像：<code>docker pull xxx</code></strong></p>
+<p><strong>删除镜像：<code>docker rmi (-f(强制)) xxx</code></strong></p>
+<p><strong>删除容器： <code>docker rm xxx</code></strong></p>
+<p><strong>停止容器： <code>docker stop XXX</code></strong></p>
+<p><strong>强制停止容器： <code>docker kill XXX</code></strong></p>
+<p><strong>删除多个容器： <code>docker rm -f $(docker ps -aq)   or   docker ps -aq | xargs docker rm -f</code></strong></p>
+<p><strong>查看容器日志： <code>docker log (-t -f ...) XXX</code></strong></p>
+<p><strong>外部直接执行容器功能并返回结果： <code>docker exec [OPTIONS] XXX [COMMAND]</code></strong></p>
+<p><strong><code>docker exec -it XXX  /bin/bash</code>  进入命令行，之后可以直接执行命令</strong></p>
+<p><strong>查看容器内部细节： <code>docker inspect XXX</code></strong></p>
+<p><strong>在CentOS系统容器执行代码： <code>docker run -it centos  /bin/sh -c &quot;echo helloworld&quot;</code></strong></p>
+<p><strong>查看当前本地镜像：<code>docker images</code></strong></p>
+<p><strong>列出当前所有在运行的容器：<code>docker ps [OPTIONS]   (linux命令查看所有进程：ps -ef )</code></strong></p>
+<p><strong>拷贝容器文件到主机上： <code>docker cp id:/../file  /../..</code></strong></p>
+<p><strong>关于run 的OPTIONS:</strong></p>
+<p><strong><code>-d</code>       后台运行容器，并返回其Id (自动守护式容器)</strong></p>
+<p><strong><code>-i</code>      以交互模式运行容器</strong></p>
+<p><strong><code>-t</code> 为容器重新分配一个伪终端输入，即产生能输入命令的终端</strong></p>
+<p><strong><code>-P</code>  随机端口映射</strong></p>
+<p><strong><code>-p</code>  指定端口映射</strong></p>
+<p><strong><code>--no-trunc</code>  不截断输出（其他命令也可能用到）</strong></p>
+<h2 id="7-镜像原理"><a href="#7-镜像原理" class="headerlink" title="7. 镜像原理"></a>7. 镜像原理</h2><p><strong><em>①是什么</em></strong></p>
+<p><strong>轻量级的可执行的独立软件包，打包了软件运行环境和基于该环境的软件（代码、库、环境变量、配置文件）</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">Union FS (联合文件系统)</th>
+<th>Docker镜像加载原理</th>
+<th>分层</th>
+<th>分层结构的缘由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">UNION文件系统是Docker镜像的基础。它是一种分层、轻量、高性能的文件系统。<strong>支持对文件系统的修改作为一次提交来进行一层一层的叠加</strong>，可以将不同目录挂载到同一个虚拟文件系统下。一次同时加载多个文件系统，但外部只可见一个。最后的文件系统会包含所有的底层文件和目录。</td>
+<td>利用了UnionFS，由一层一层文件系统组成。其<strong>最底层是bootfs</strong>（包含kernel等）。（可以看成linux的内核）而使用的rootfs在bootfs之上，只需要包含基本的命令工具，库即可。<strong>底层直接用宿主机的kernel，自己只提供rootfs</strong>。这就是docker系统镜像更轻量的原因。</td>
+<td>例如这个tomcat的模型<img src="https://s1.ax1x.com/2020/07/21/UIXeeA.png" alt=""></td>
+<td>好处：资源共享。一份镜像即可为多个容器服务。</td>
+</tr>
+</tbody></table>
+<p><strong><em>②特性</em></strong></p>
+<p><strong>docker镜像是只读的。</strong></p>
+<p><strong>当容器启动时，一个新的<code>可写层</code>（容器层）被加载到镜像顶部</strong></p>
+<p><strong>③docker commit</strong></p>
+<p><strong>提交容器副本使其成为一个新的镜像</strong></p>
+<p><code>docker commit -m=&quot;提交的描述信息&quot; -a=&quot;作者&quot; 容器ID 目标镜像名称：[]</code></p>
+<p><strong>利用这个命令，可以对镜像删改后生成一个新镜像（可以干些坏事）</strong></p>
+<h2 id="8-Docker容器数据卷"><a href="#8-Docker容器数据卷" class="headerlink" title="8. Docker容器数据卷"></a>8. Docker容器数据卷</h2><h3 id="理念及特性"><a href="#理念及特性" class="headerlink" title="理念及特性"></a>理念及特性</h3><p><strong>理念：为了保存用户在docker中的数据。（容器的持久化，容器间继承+共享数据）</strong></p>
+<p><strong>卷是目录或文件，存在于一或多个容器中，能使数据持久化，完全独立于容器的生存周期，因此容器删除时不会删除其卷</strong></p>
+<ul>
+<li>卷可在容器之间共享或重用数据</li>
+<li>卷中的更改可以直接生效</li>
+<li>卷的更改不会包含在镜像的更新中</li>
+<li>卷的生命周期一直持续到没有容器使用它为止</li>
+</ul>
+<h3 id="添加数据卷"><a href="#添加数据卷" class="headerlink" title="添加数据卷"></a>添加数据卷</h3><h4 id="命令添加"><a href="#命令添加" class="headerlink" title="命令添加"></a>命令添加</h4><p><code>docker run -it -v  /宿主机绝对路径目录：/容器内目录   [ro]镜像名   //加ro则为只读（只是在容器里，但可以在宿主机里改动），否则默认为rw</code></p>
+<p><strong>添加之后，用<code>docker inspect</code>查看该容器时，会发现一个属性下有了主机的这个目录，可以发现，你在宿主机的该目录下所作的改动（例如新建一个文件），会在你的该容器里也有同样改动，而你在容器的改动也会反应在你的宿主机里面</strong></p>
+<h4 id="Docker-File添加（在下一部分涉及）"><a href="#Docker-File添加（在下一部分涉及）" class="headerlink" title="Docker File添加（在下一部分涉及）"></a>Docker File添加（在下一部分涉及）</h4><h4 id="数据卷容器"><a href="#数据卷容器" class="headerlink" title="数据卷容器"></a>数据卷容器</h4><p><strong>某一个容器挂载了数据卷，其它容器通过它共享数据，则该容器称为数据卷容器。（父容器）</strong></p>
+<p><strong>有点类似于继承（但不一样）。但子容器也可向父容器传递数据。</strong></p>
+<p><strong>父容器消失后子容器还会存在，数据不会变，修改一个子容器，另外的子容器也会相应改变</strong></p>
+<p><code>docker run -it --name contan2 --volumes-from contan1 镜像名</code></p>
+<h2 id="9-Docker-File"><a href="#9-Docker-File" class="headerlink" title="9. Docker File"></a>9. Docker File</h2><h3 id="①是什么"><a href="#①是什么" class="headerlink" title="①是什么"></a>①是什么</h3><p>用来构建<strong>Docker镜像</strong>的<strong>构建文件</strong>，它相当于Docker镜像的开发文件，是镜像的原材料，是由一系列命令和参数构成的脚本。</p>
+<p><strong>Docker File的开发，Docker镜像的生成，Docker容器的部署运维，这三者构成了Docker体系的基石</strong></p>
+<p>构建步骤：</p>
+<p>1、编写dockerfile文件，可直接命名一个叫Dockerfile的文件用vim编写 </p>
+<p>2、<code>docker build 【-f /../../】(指定路径，默认为当前目录，可省略)  -t name:tag.</code> </p>
+<p>3、<code>docker run</code></p>
+<h3 id="②构建过程"><a href="#②构建过程" class="headerlink" title="②构建过程"></a>②构建过程</h3><p><strong>基础规则：</strong></p>
+<ul>
+<li>每条保留字指令为大写，且后面至少有一个参数</li>
+<li>指令由上向下，顺序执行</li>
+<li>#表示注释</li>
+<li>每条指令都会创建一个新的镜像层，并对镜像进行提交</li>
+</ul>
+<p><strong>构建流程：</strong></p>
+<ul>
+<li>docker从基础镜像运行一个容器（<code>FROM XXX</code>）</li>
+<li>执行一条执行便对容器做出修改</li>
+<li>执行类似commit操作提交一个新的镜像层</li>
+<li>docker基于刚提交的镜像运行一个新容器</li>
+<li>继续执行指令，直至全部执行完毕</li>
+</ul>
+<h3 id="③保留字指令"><a href="#③保留字指令" class="headerlink" title="③保留字指令"></a>③保留字指令</h3><ul>
+<li><code>FROM         基础镜像（DockerHub中 绝大部分镜像的基础镜像都是Base）</code></li>
+<li><code>MAINTAINER   镜像维护者的姓名和邮箱地址</code></li>
+<li><code>RUN          容器构建时需要运行的linux命令</code></li>
+<li><code>EXPOSE       当前容器对外暴露的端口号</code></li>
+<li><code>WORKDIR      创建容器后，终端默认登录进来的工作目录，例如centos镜像运行后默认是在根目录&#39;/&#39;下</code></li>
+<li><code>ENV          构建镜像过程中设置环境变量</code></li>
+<li><code>ADD          将宿主机的文件拷贝进镜像，且会自动处理URL，解压tar压缩包</code></li>
+<li><code>COPY         与ADD类似，但不能对文件处理  COPY SRC DEST</code></li>
+<li><code>VOLUME       添加容器数据卷 例如：VOLUME [&quot;DataFath&quot;,&quot;/DataSon&quot;]</code></li>
+<li><code>CMD          指定容器启动时要运行的命令，CMD可以有多个，但只有最后一个生效</code></li>
+<li><code>ENTRYPOINT   指定容器启动时要运行的命令,并且可在启动命令里再添加参数，比CMD更强大</code></li>
+<li><code>ONBUILD      被继承时的运行命令。 一个触发器（trigger），当该镜像被继承后触发</code></li>
+</ul>
+<p>​                                                        </p>
+<h2 id="10-Docker-Push-本地镜像送至云端"><a href="#10-Docker-Push-本地镜像送至云端" class="headerlink" title="10. Docker Push(本地镜像送至云端)"></a>10. Docker Push(本地镜像送至云端)</h2><p><strong>阿里云开发平台：dev.aliyun.com/search.html</strong></p>
+<p><strong>先进入管理控制台</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/22/UHqlOe.png" alt=""></p>
+<ul>
+<li><p><strong>1、创建镜像仓库</strong></p>
+</li>
+<li><p><strong>2、按照网站给的文档操作即可，一共三步命令即可</strong></p>
+<p>​    </p>
+</li>
+</ul>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Docker的成因"><span class="toc-number">1.</span> <span class="toc-text">1. Docker的成因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Docker是什么"><span class="toc-number">2.</span> <span class="toc-text">2. Docker是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Docker安装"><span class="toc-number">3.</span> <span class="toc-text">3. Docker安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Docker三大要素"><span class="toc-number">4.</span> <span class="toc-text">4. Docker三大要素</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#①镜像（image）"><span class="toc-number">4.1.</span> <span class="toc-text">①镜像（image）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#②容器-container"><span class="toc-number">4.2.</span> <span class="toc-text">②容器(container)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#③仓库-repository"><span class="toc-number">4.3.</span> <span class="toc-text">③仓库(repository)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-Docker运行实例"><span class="toc-number">5.</span> <span class="toc-text">5. Docker运行实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-容器命令"><span class="toc-number">6.</span> <span class="toc-text">6. 容器命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-镜像原理"><span class="toc-number">7.</span> <span class="toc-text">7. 镜像原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-Docker容器数据卷"><span class="toc-number">8.</span> <span class="toc-text">8. Docker容器数据卷</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理念及特性"><span class="toc-number">8.1.</span> <span class="toc-text">理念及特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#添加数据卷"><span class="toc-number">8.2.</span> <span class="toc-text">添加数据卷</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#命令添加"><span class="toc-number">8.2.1.</span> <span class="toc-text">命令添加</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Docker-File添加（在下一部分涉及）"><span class="toc-number">8.2.2.</span> <span class="toc-text">Docker File添加（在下一部分涉及）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据卷容器"><span class="toc-number">8.2.3.</span> <span class="toc-text">数据卷容器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-Docker-File"><span class="toc-number">9.</span> <span class="toc-text">9. Docker File</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#①是什么"><span class="toc-number">9.1.</span> <span class="toc-text">①是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#②构建过程"><span class="toc-number">9.2.</span> <span class="toc-text">②构建过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#③保留字指令"><span class="toc-number">9.3.</span> <span class="toc-text">③保留字指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-Docker-Push-本地镜像送至云端"><span class="toc-number">10.</span> <span class="toc-text">10. Docker Push(本地镜像送至云端)</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
