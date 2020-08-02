@@ -10,8 +10,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="Expect Us,1、isset()检测变量是否设置，并且不是 NULL。如果已经使用 unset() 释放了一个变量之后，它将不再是 isset()。
-若使用 isset() 测试一个被设置成 NULL 的变量，将,"> 
+    <meta name="description" content="Expect Us,前言PHP有着许多特性，且应用及其广泛。在介绍函数之前，先看看它的弱类型
+这些值在PHP中是相等的：
+&amp;#39;&amp;#39;==0==False
+&amp;#39;123&amp;#39;==123
+&amp;#39;abc,"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -63,7 +66,16 @@
 
         </div>
         <div class="content markdown">
-            <h2 id="1、isset"><a href="#1、isset" class="headerlink" title="1、isset()"></a>1、isset()</h2><p><strong><em>检测变量是否设置，并且不是 NULL。<br>如果已经使用 unset() 释放了一个变量之后，它将不再是 isset()。</em></strong></p>
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><strong>PHP有着许多特性，且应用及其广泛。在介绍函数之前，先看看它的弱类型</strong></p>
+<p><strong>这些值在PHP中是相等的：</strong></p>
+<p><code>&#39;&#39;==0==False</code></p>
+<p><code>&#39;123&#39;==123</code></p>
+<p><code>&#39;abc&#39;==0</code></p>
+<p><code>&#39;123a&#39;==123</code></p>
+<p><code>&#39;0x01&#39;==1</code></p>
+<p><code>&#39;0e123456789&#39;==&#39;0e987654321&#39;</code></p>
+<p><code>NULL==false==0     true==1   [false]==[0]==[NULL]==[&#39;&#39;]</code></p>
+<h2 id="1、isset"><a href="#1、isset" class="headerlink" title="1、isset()"></a>1、isset()</h2><p><strong><em>检测变量是否设置，并且不是 NULL。<br>如果已经使用 unset() 释放了一个变量之后，它将不再是 isset()。</em></strong></p>
 <p><strong><em>若使用 isset() 测试一个被设置成 NULL 的变量，将返回 FALSE。同时要注意的是一个 NULL 字节（”\0”）并不等同于 PHP 的 NULL 常数。</em></strong></p>
 <p><code>isset($a,$b.....)</code>   <strong><em>#返回BOOL</em></strong></p>
 <h2 id="2、in-array"><a href="#2、in-array" class="headerlink" title="2、in_array()"></a>2、in_array()</h2><p><strong><em>in_array() 函数搜索数组中是否存在指定的值。</em></strong></p>
@@ -99,6 +111,89 @@
 <p>​    \1. 格式:index.php?userName=jack&amp;password=123<br>​    \2. 参数名与参数值之间没有空格</p>
 <p>​    \3. 参数值不需要使用单双引号包括</p>
 <p><strong><em>三. $_POST获取post数</em></strong><br>    表单数据是通过请求体传递到服务端的<br>    我们在界面上看不到<br>    可以提交任何类型的数据，包括文件由于界面上看不见，浏览器也不储存，所以更安全</p>
+<h2 id="6、scandir"><a href="#6、scandir" class="headerlink" title="6、scandir()"></a>6、scandir()</h2><p><strong>scandir() 函数返回指定目录中的文件和目录的数组。</strong></p>
+<p>用法：<code>scandir(directory,sorting_order,context);</code></p>
+<table>
+<thead>
+<tr>
+<th><code>directory</code></th>
+<th><code>sorting_order</code></th>
+<th><code>context</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>必需。规定要扫描的目录.</td>
+<td>选。规定排列顺序。默认是 0，表示按字母升序排列。如果设置为 SCANDIR_SORT_DESCENDING 或者 1，则表示按字母降序排列。如果设置为 SCANDIR_SORT_NONE，则返回未排列的结果。</td>
+<td>可选。规定目录句柄的环境。context 是可修改目录流的行为的一套选项。</td>
+</tr>
+</tbody></table>
+<p>例如：<code>$dir=/../..     $a=scandir($dir)    print_r($a)</code></p>
+<h2 id="7、print、print-r、echo的区别"><a href="#7、print、print-r、echo的区别" class="headerlink" title="7、print、print_r、echo的区别"></a>7、print、print_r、echo的区别</h2><h3 id="①、"><a href="#①、" class="headerlink" title="①、"></a>①、</h3><p><strong>echo是PHP语句。</strong></p>
+<p><strong>print实际上不是函数（而是语言结构），所以可以不用圆括号包围参数列表。</strong></p>
+<p><strong>print_r是函数,语句没有返回值,函数可以有返回值(即便没有用)  。</strong></p>
+<h3 id="②、"><a href="#②、" class="headerlink" title="②、"></a>②、</h3><p><strong>print（）      只能打印出简单类型变量的值(如int,string) 。</strong> </p>
+<p><strong>print_r（） 可以打印出复杂类型变量的值(如数组,对象)  。</strong></p>
+<p><strong>echo        输出一个或者多个字符串。</strong></p>
+<h3 id="③、"><a href="#③、" class="headerlink" title="③、"></a>③、</h3><p><strong>echo没有返回值。</strong></p>
+<p><strong>print返回值总为1。</strong></p>
+<p><strong>print-r输出成功时，返回true，不成功时返回false。</strong></p>
+<h3 id="④、"><a href="#④、" class="headerlink" title="④、"></a>④、</h3><p><strong>用法：</strong></p>
+<p><strong>echo  或者  echo()。</strong></p>
+<p><strong>print   或者print()。</strong></p>
+<p><strong>print_r()</strong></p>
+<h2 id="8、var-dump"><a href="#8、var-dump" class="headerlink" title="8、var_dump()"></a>8、<strong>var_dump()</strong></h2><hr>
+<p><strong>var_dump()函数用于输出变量的相关信息。</strong></p>
+<p><strong>或显示关于一个或多个表达式的结构信息，包括表达式的类型与值。数组将递归展开值，通过缩进显示其结构。</strong></p>
+<p>例如 ：<code>var_dump($a,$b.....)</code></p>
+<h2 id="9、chr"><a href="#9、chr" class="headerlink" title="9、chr()"></a>9、chr()</h2><p><code>chr(ascii)</code></p>
+<p><strong>参数为一个ascii码值，返回一个对应的字符</strong></p>
+<p><strong>（可以用来绕过）</strong></p>
+<p>例如：</p>
+<p><code>Chr(47)   /</code>      <code>Chr(36)   $     Chr(37)   %</code></p>
+<h2 id="10、file-get-contents"><a href="#10、file-get-contents" class="headerlink" title="10、file_get_contents()"></a>10、file_get_contents()</h2><p><code>file_get_contents(path,include_path,context,start,max_length)</code></p>
+<table>
+<thead>
+<tr>
+<th>path</th>
+<th>include_path</th>
+<th>context</th>
+<th>start</th>
+<th>max_length</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>必需，规定要读取的文件</td>
+<td>可选。设置include_path的作用就是设置用include()函数包函文件时的路径，当然也可以不设置include_path，只要在包函文件时写出具体的文件相对或绝对路即可</td>
+<td>可选。规定文件句柄的环境。context 是一套可以修改流的行为的选项。若使用 NULL，则忽略。</td>
+<td>可选。规定在文件中开始读取的位置。</td>
+<td>可选。规定读取的字节数。</td>
+</tr>
+</tbody></table>
+<p>例如：</p>
+<p><code>&lt;?php
+ echo file_get_contents(&quot;test.txt&quot;);
+ ?&gt;</code></p>
+<h2 id="11、strstr"><a href="#11、strstr" class="headerlink" title="11、strstr()"></a>11、strstr()</h2><p><strong>strstr() 函数搜索字符串在另一字符串中是否存在，如果是，返回该字符串及剩余部分，否则返回 FALSE。</strong></p>
+<p><code>strstr(string,search,before_search)</code></p>
+<table>
+<thead>
+<tr>
+<th>string</th>
+<th>search</th>
+<th>before_search</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>必需。规定被搜索的字符串。</td>
+<td>必需。规定要搜索的字符串。如果该参数是数字，则搜索匹配该数字对应的 ASCII 值的字符</td>
+<td>可选。一个默认值为 “false” 的布尔值。如果设置为 “true”，它将返回 <em>search</em> 参数第一次出现之前的字符串部分。</td>
+</tr>
+</tbody></table>
+<p>例如：<code>&lt;?php
+ echo strstr(&quot;Hello world!&quot;,&quot;world&quot;,true);
+ ?&gt;</code></p>
+<p><strong>返回Hello</strong></p>
+<h2 id="12、stristr"><a href="#12、stristr" class="headerlink" title="12、stristr()"></a>12、stristr()</h2><p><strong>stristr() 函数搜索字符串在另一字符串中的第一次出现。并返回字符串的剩余部分(注意：该函数不区分大小写！！！)，其它与strstr用法相同</strong></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
@@ -134,7 +229,7 @@
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、isset"><span class="toc-number">1.</span> <span class="toc-text">1、isset()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、in-array"><span class="toc-number">2.</span> <span class="toc-text">2、in_array()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、mb-substr"><span class="toc-number">3.</span> <span class="toc-text">3、mb_substr()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、mb-strpos"><span class="toc-number">4.</span> <span class="toc-text">4、mb_strpos()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、-REQUEST-‘-‘"><span class="toc-number">5.</span> <span class="toc-text">5、$_REQUEST [‘  ‘]</span></a></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#1、isset"><span class="toc-number">2.</span> <span class="toc-text">1、isset()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、in-array"><span class="toc-number">3.</span> <span class="toc-text">2、in_array()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、mb-substr"><span class="toc-number">4.</span> <span class="toc-text">3、mb_substr()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、mb-strpos"><span class="toc-number">5.</span> <span class="toc-text">4、mb_strpos()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、-REQUEST-‘-‘"><span class="toc-number">6.</span> <span class="toc-text">5、$_REQUEST [‘  ‘]</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、scandir"><span class="toc-number">7.</span> <span class="toc-text">6、scandir()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、print、print-r、echo的区别"><span class="toc-number">8.</span> <span class="toc-text">7、print、print_r、echo的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#①、"><span class="toc-number">8.1.</span> <span class="toc-text">①、</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#②、"><span class="toc-number">8.2.</span> <span class="toc-text">②、</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#③、"><span class="toc-number">8.3.</span> <span class="toc-text">③、</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#④、"><span class="toc-number">8.4.</span> <span class="toc-text">④、</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8、var-dump"><span class="toc-number">9.</span> <span class="toc-text">8、var_dump()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9、chr"><span class="toc-number">10.</span> <span class="toc-text">9、chr()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10、file-get-contents"><span class="toc-number">11.</span> <span class="toc-text">10、file_get_contents()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11、strstr"><span class="toc-number">12.</span> <span class="toc-text">11、strstr()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12、stristr"><span class="toc-number">13.</span> <span class="toc-text">12、stristr()</span></a></li></ol>	
         </div>
     
 </div>

@@ -109,6 +109,44 @@
 <hr>
 <p><strong>于是我们可以输入<code>1;set sql_mode=PIPES_AS_CONCAT;select 1</code>,这样系统会先修改规则，再将 <code>select 1</code> 和 <code>select flag from flag</code> 的结果拼接在一起，打印出flag</strong></p>
 <h2 id="4、EasySQL-极客大挑战"><a href="#4、EasySQL-极客大挑战" class="headerlink" title="4、EasySQL(极客大挑战)"></a>4、EasySQL(极客大挑战)</h2><p><strong>这题确实够easy，直接admin加万能语句拿到flag</strong></p>
+<h2 id="5、Easy-tornado"><a href="#5、Easy-tornado" class="headerlink" title="5、Easy_tornado"></a>5、Easy_tornado</h2><p><strong>看见题目名称，于是去百度了一下tornado，得知其是一个python的模板。当时想的就是模板注入，这也是我第一次接触模板注入。</strong></p>
+<p><strong>开始，发现有三个链接。分别看了下，很明显是给的提示</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aifwE6.md.png" alt=""></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aifQEV.md.png" alt=""></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aiffVP.md.png" alt=""></p>
+<p><strong>可以得知以下几点信息，一是 url里，都是filename加一串哈希值。说明等会可能要构造类似结构的payload来访问flag。二是flag在的文件名，肯定有用。三是最后的哈希生成方法，即md5进行加密生成filehash，filename我们已知，但是cookie_secret是不知道的。</strong></p>
+<p><strong>当在url里随便输入一些东西，会出现一个打印出error的页面，并且url里显示<code>?msg=Error</code>，这可能就是为什么会联想到模板注入的原因吧。</strong></p>
+<p><strong>然后是文件里提示的render，看了下大佬的解释，得知这是一个用来渲染的函数，可以用不同的参数来访问网页。而在tornado中，可以用&amp;#123&amp;#1235&amp;#125&amp;#12来访问网页。例如构造&amp;#123&amp;#1231&amp;#125&amp;#125，页面返回1</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/ai4ynA.md.png" alt=""></p>
+<p><strong>因为只差cookie_secret的值，所以要利用msg去获取，看了大佬的wp，得知可以用handle.settings来显示cookie。Handler是Tornado的一个对象。<code>在Tornado的前端页面模板中，Tornado提供了一些对象别名来快速访问对象</code>Handler指向处理当前这个页面的RequestHandler对象,而RequestHandler.settings又指向self.application.settings,所以handler.settings就指向RequestHandler.application.settings了（不太懂，先留着，以后再学习）</strong></p>
+<p><strong>所以构造<code>?msg=</code>&amp;#123&amp;#123<code>handler.settings</code>&amp;#125&amp;#125`</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aiHA6U.md.png" alt=""></p>
+<p><strong>得到cookie（不同的实例是不一样的）</strong></p>
+<p><strong>然后是加密。。。用在线工具试了几次，filehash就是不对。于是改用自己写的脚本</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aiHIjU.png" alt=""></p>
+<p><strong>python3里的hashlib 模块含有md5函数。最后得到hash值。构造payload<code>file?filename=/f..g&amp;filehash=e9bc....f9</code>得到flag</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aiqRS0.md.png" alt=""></p>
+<h2 id="6、Havefun"><a href="#6、Havefun" class="headerlink" title="6、Havefun"></a>6、Havefun</h2><p><strong>这题先F12，发现一句PHP代码在注释里，要用GET提交一个cat变量，若cat值为dog，就打印flag。于是，构造<code>?cat=dog</code>即可</strong></p>
+<h2 id="7、Easy-Calc"><a href="#7、Easy-Calc" class="headerlink" title="7、Easy_Calc"></a>7、Easy_Calc</h2><p><strong>进去之后是一个计算器，输入1，就返回1，输入一个运算式，就给出结果。</strong></p>
+<p><strong>开始以为它是跟SQL注入相关的题目，在尝试了多个语句后发现行不通，可能是别的相关题型，然后也没有啥思路，就看了部分wp，发现有一个calc.php可以访问。至于为啥能想到呢，可能是大佬的经验和直觉吧</strong></p>
+<p><strong>但后来又想了想，一般的网站是会有index.php可以访问的，但这个网站的index访问不了，所以可能会隐藏一些相关的php</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/26/aphi2n.md.png" alt=""></p>
+<p><strong>可以看见，在这里给出了过滤的规则，首先在这个页面用GET（一定是在这个页面提交，之前在上一级提交，试了半天没有回显。。。）提交一个num，num的值不能含有这一系列字符。最后用eval去执行echo num的语句，但是我们可以在num后添加‘  ；’来执行其它的代码</strong></p>
+<p>*<em>但是，如果你提交<code>?num=1;xxxxxx;</code>会显示页面不存在。所以这应该是waf的功能，只能让你给num赋值数字，那怎么办呢？这里要涉及PHP的字符解析规则了。PHP在解析时会将所有参数替换为有效变量名，例如会删除空白符。因此，可以用  <code>num</code>代替<code>num</code>，前者多了一个空格，waf把这个变量当做  <code>num</code> 而不是<code>num</code>，但PHP解析时会把空格删除，因此代码可以正常执行 *</em></p>
+<p><strong>首先来看一下根目录下的目录和文件：<code>? num=1;var_dump(scandir(chr(47)));</code>这里由于过滤’/‘，所以把它用chr（47）来替换，用scandir查看，再用var_dump来返回运行结果</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/26/apo4tU.png" alt=""></p>
+<p><strong>发现有一个f1agg，可以想到这就是存放flag的目录了。于是查看目录内容，<code>? num=1;var_dump(get_file_contents(chr(47).f1agg));</code>，结果返回错误</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/26/apTKjs.png" alt=""></p>
+<p><strong>这让我迷惑了，因为返回的是错误，说明是语法上出了问题，可能跟这个waf有关，于是试了多次，发现，只要file_get_contents里有字母，就会返回错误。那就把字母换成chr，于是，用<code>? num=1;var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))</code>，得到flag</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/26/ap7YZt.png" alt=""></p>
+<h2 id="8、Secret-File"><a href="#8、Secret-File" class="headerlink" title="8、Secret File"></a>8、Secret File</h2><p><strong>首先F12，发现有一个<code>./Archive_room.php</code>的页面，于是进入这个页面，发现有一个可以点击的按钮，点击之后，屏幕会闪一下，再跳转到另一个end.php页面。说明信息就藏在一闪而过的画面中。于是抓包，得到一个secr3t.php的线索</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aPZJvF.md.png" alt=""></p>
+<p><strong>在初始页面进入secr3t.php的页面，发现了信息，flag在flag.php里，那么就要用这个GET变量$file构造payload去访问flag.php。</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aPeQqH.md.png" alt=""></p>
+<p><strong>根据条件语句中的信息，可以知道file中不能含这些字符，而input,data，../立刻给出了提示，也就是PHP伪协议，可以通过伪协议去<code>绕过</code>，从而访问或上传文件，能否使用某些协议取决于php.ini文件(PHP的配置文件，可用<code>phpinfo()</code>查看)中的include指令参数以及php版本等设置</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aPeNz8.png" alt=""></p>
+<p><strong>要从服务器上访问一个文件，就要用到filter协议。<code>?file=php://filter/convert.base64-encode/resource=flag.php</code>，就能打印出该文件内容的base64编码后的内容。再用base64解码得到flag</strong></p>
+<p><img src="https://s1.ax1x.com/2020/07/27/aPm16U.png" alt=""></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
@@ -144,7 +182,7 @@
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、HCTF2018-Warm-up"><span class="toc-number">1.</span> <span class="toc-text">1、HCTF2018 Warm up</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、随便注"><span class="toc-number">2.</span> <span class="toc-text">2、随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、EasySQL"><span class="toc-number">3.</span> <span class="toc-text">3、EasySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、EasySQL-极客大挑战"><span class="toc-number">4.</span> <span class="toc-text">4、EasySQL(极客大挑战)</span></a></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、HCTF2018-Warm-up"><span class="toc-number">1.</span> <span class="toc-text">1、HCTF2018 Warm up</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、随便注"><span class="toc-number">2.</span> <span class="toc-text">2、随便注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、EasySQL"><span class="toc-number">3.</span> <span class="toc-text">3、EasySQL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、EasySQL-极客大挑战"><span class="toc-number">4.</span> <span class="toc-text">4、EasySQL(极客大挑战)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、Easy-tornado"><span class="toc-number">5.</span> <span class="toc-text">5、Easy_tornado</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、Havefun"><span class="toc-number">6.</span> <span class="toc-text">6、Havefun</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、Easy-Calc"><span class="toc-number">7.</span> <span class="toc-text">7、Easy_Calc</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8、Secret-File"><span class="toc-number">8.</span> <span class="toc-text">8、Secret File</span></a></li></ol>	
         </div>
     
 </div>

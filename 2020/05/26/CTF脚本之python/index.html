@@ -10,7 +10,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="Expect Us,引言在CTF中有很多情况都是需要编写脚本去帮助参赛者完成工作的，而python是如今最强大的语言，其便捷性与库的多样性对于解题的帮助是非常大的。python的语法非常简单，难点在于库的使用。因此，学,"> 
+    <meta name="description" content="Expect Us,引言在CTF中有很多情况都是需要编写脚本去帮助参赛者完成工作的，而python是如今最强大的语言(之一)，其便捷性与库的多样性对于解题的帮助是非常大的。python的语法非常简单，难点在于库及函数的,"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -62,7 +62,7 @@
 
         </div>
         <div class="content markdown">
-            <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a><em>引言</em></h1><p><strong>在CTF中有很多情况都是需要编写脚本去帮助参赛者完成工作的，而python是如今最强大的语言，其便捷性与库的多样性对于解题的帮助是非常大的。python的语法非常简单，难点在于库的使用。因此，学好重要的模块及函数，能自己写脚本，才能从脚本小子变为大佬。</strong></p>
+            <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a><em>引言</em></h1><p><strong>在CTF中有很多情况都是需要编写脚本去帮助参赛者完成工作的，而python是如今最强大的语言(之一)，其便捷性与库的多样性对于解题的帮助是非常大的。python的语法非常简单，难点在于库及函数的使用。因此，学好重要的模块及函数，能自己写脚本，才能从脚本小子变为大佬。</strong></p>
 <hr>
 <h1 id="1、requests"><a href="#1、requests" class="headerlink" title="1、requests"></a><em>1、requests</em></h1><p><strong>requests是使用Apache2 licensed 许可证的HTTP库。它支持HTTP连接保持和连接池，支持使用cookie保持会话，支持文件上传，支持自动响应内容的编码，支持国际化的URL和POST数据自动编码。在python内置模块的基础上进行了高度的封装，从而使得python进行网络请求时，变得人性化，使用Requests可以轻而易举的完成浏览器可有的任何操作。现代，国际化，友好。</strong></p>
 <h3 id="1）、安装、导入模块"><a href="#1）、安装、导入模块" class="headerlink" title="1）、安装、导入模块"></a><em>1）、安装、导入模块</em></h3><p><strong><code>pip install requests             //安装</code></strong></p>
@@ -123,6 +123,69 @@
 <p><strong><code>regex.split() :将一个字符串按照正则表达式匹配结果进行分割，返回列表类型</code></strong></p>
 <p><strong><code>regex.finditer() :搜索字符串，返回一个匹配结果的迭代类型，每个迭代元素是match对象</code></strong></p>
 <p><strong><code>regex.sub() :在一个字符串中替换所有匹配正则表达式的子串，返回替换后的字符串</code></strong></p>
+<h1 id="3、hashlib"><a href="#3、hashlib" class="headerlink" title="3、hashlib"></a><em>3、hashlib</em></h1><h2 id="1）简介"><a href="#1）简介" class="headerlink" title="1）简介"></a><em>1）简介</em></h2><p><strong>摘要算法:</strong></p>
+<p><strong>又称哈希算法、散列算法。它通过一个函数，把任意长度的数据转换为一个长度固定的数据串（通常用16进制的字符串表示）</strong></p>
+<p><strong>hashlib提供了常见的摘要算法，如MD5，SHA1等等。</strong></p>
+<h2 id="2）MD5"><a href="#2）MD5" class="headerlink" title="2）MD5"></a><em>2）MD5</em></h2><p><strong>MD5 固定生成128 bit字节的字符串，通常用32位16进制字符串表示。：</strong></p>
+<p><code>import hashlib</code></p>
+<p><code>str=&quot;hello&quot;               //给要加密的字符串赋值</code></p>
+<p><code>str_md5=hashlib.md5()           //创建一个md5对象</code></p>
+<p><code>str_md5.update(str.encode(&quot;utf-8&quot;)) //将str的值传给md5对象。必须先将其转码为utf-8。</code></p>
+<p><code>该句也可写成：str_md5.update(&quot;hello&quot;.encode(&quot;utf-8&quot;))</code></p>
+<p><code>return str_md5.hexdigest()       //返回哈希值（为十六进制形式）</code></p>
+<h2 id="3）SHA1"><a href="#3）SHA1" class="headerlink" title="3）SHA1"></a><em>3）SHA1</em></h2><p><strong>SHA1的结果是160 bit字节，通常用一个40位的16进制字符串表示。</strong></p>
+<p><code>import hashlib</code></p>
+<p><code>str=&quot;hello&quot;</code></p>
+<p><code>str_sha1=hashlib.sha1()</code></p>
+<p><code>str_sha1.update(str.encode(&quot;utf-8&quot;))</code></p>
+<p><code>return str_sha1.hexdigest()</code></p>
+<h1 id="4、BeautifulSoup"><a href="#4、BeautifulSoup" class="headerlink" title="4、BeautifulSoup"></a><em>4、BeautifulSoup</em></h1><h2 id="1-安装"><a href="#1-安装" class="headerlink" title="1) 安装"></a><em>1) 安装</em></h2><p><code>pip install beautifulsoup4</code></p>
+<p><code>pip install lxml        //html解析器</code></p>
+<h2 id="2-导入"><a href="#2-导入" class="headerlink" title="2)导入"></a><em>2)导入</em></h2><p><code>from bs4 import BeautifulSoup</code></p>
+<h2 id="3-用法"><a href="#3-用法" class="headerlink" title="3)用法"></a><em>3)用法</em></h2><p><code>html=&quot;&lt;html&gt; ...&lt;/html&gt;&quot;</code></p>
+<p><code>from bs4 import BeautifulSoup</code></p>
+<p><code>soup = BeautifulSoup(html, &#39;lxml&#39;)
+print(soup.prettify()) //让HTML页面更友好的显示
+print(soup.title.string) //得到&lt;title&gt; 1234 &lt;/title&gt;里面的1234</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">print(soup.title, soup.title.string) #获取指定标签，获取指定标签里面的内容</span><br><span class="line">print(soup(&#39;title&#39;), soup(&#39;title&#39;)[0].string) #获取指定标签也可以写成这样</span><br><span class="line"></span><br><span class="line">print(soup.meta.get(&#39;charset&#39;))   &#x2F;&#x2F;获取指定标签的属性</span><br><span class="line">print(soup.meta[&#39;charset&#39;])       &#x2F;&#x2F;获取指定标签的属性也可写成这样</span><br><span class="line">print(soup.meta)                  &#x2F;&#x2F;获取第一个标签（多个只取第一个）</span><br><span class="line">print(soup.find(&#39;meta&#39;))          &#x2F;&#x2F;获取第一个标签，结果和上面一样</span><br><span class="line">print(soup.find(&#39;meta&#39;, attrs&#x3D;&#123;&#39;name&#39;:&#39;viewport&#39;&#125;)) &#x2F;&#x2F;获取第一个标签，根据属性过滤获取</span><br><span class="line">print(soup.find_all(&#39;meta&#39;, attrs&#x3D;&#123;&#39;charset&#39;:True&#125;)) &#x2F;&#x2F;获取所有标签的列表，同时根据是否含有属性charset过滤获取</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h1 id="5、函数：filter"><a href="#5、函数：filter" class="headerlink" title="5、函数：filter"></a><em>5、函数：filter</em></h1><p><strong>filter() 函数用于过滤序列，过滤掉不符合条件的元素，返回由符合条件元素组成的新列表。</strong></p>
+<p><strong>接收两个参数，第一个为函数或<code>None</code>，<code>第一个参数相当于指定过滤的方法</code>，第二个为序列，<code>就是被按照第一个函数指定的规则进行过滤的对象</code>，序列的每个元素作为参数传递给函数进行判断，然后返回 True 或 False，最后将返回 True 的元素放到新列表中。</strong></p>
+<p><code>filter(function / None, iterable)</code></p>
+<p><strong>例如：对一个纯数列表只保留是奇数的元素</strong></p>
+<p><code>def is_odd(n):</code></p>
+<p><code>return n % 2 == 1</code></p>
+<p><code>newlist = filter(is_odd, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])</code></p>
+<p><code>print(newlist)</code></p>
+<p><strong>结果为<code>[1,3,5,7,9]</code></strong></p>
+<h1 id="6、函数：lambda"><a href="#6、函数：lambda" class="headerlink" title="6、函数：lambda"></a><em>6、函数：lambda</em></h1><p><strong>创建匿名函数。是指一类无需定义标识符（函数名）的函数或子程序。<br>lambda 函数可以接收任意多个参数 (包括可选参数) 并且返回单个表达式的值。</strong></p>
+<p><strong>例如：<code>add=lambda x,y: x+y ;  print(add(1,2));   //结果1+2的值</code></strong></p>
+<h1 id="7、函数：map"><a href="#7、函数：map" class="headerlink" title="7、函数：map"></a><em>7、函数：map</em></h1><p><strong>map（）能为参数制造对应的映射关系</strong></p>
+<p><strong>用法：<code>map(function, iterable, ...)</code></strong></p>
+<p><strong>例如：<code>map(square, [1,2,3,4,5])</code></strong></p>
+<p>*<em><code># 计算列表各个元素的平方</code> *</em></p>
+<p><strong><code>结果[1, 4, 9, 16, 25]</code></strong></p>
+<p><code>map(lambda x: x ** 2, [1, 2, 3, 4, 5])</code></p>
+<p><code># 使用 lambda 匿名函数</code></p>
+<p><code>结果[1, 4, 9, 16, 25]</code></p>
+<h1 id="8、函数：进制转换"><a href="#8、函数：进制转换" class="headerlink" title="8、函数：进制转换"></a><em>8、函数：进制转换</em></h1><h2 id="1-hex-amp-oct-amp-bin"><a href="#1-hex-amp-oct-amp-bin" class="headerlink" title="1)hex &amp; oct &amp; bin"></a><em>1)hex &amp; oct &amp; bin</em></h2><p><code>hex(16)     # 10进制转16进制
+oct(8)      # 10进制转8进制
+bin(8)      # 10进制转2进制</code></p>
+<h2 id="2-int"><a href="#2-int" class="headerlink" title="2)int()"></a><em>2)int()</em></h2><p><code>int(x, base)  //x -- 字符串或数字。base -- 进制数，默认十进制</code></p>
+<p><strong>1、若 x 为纯数字，则不能有 base 参数，否则报错；其作用为对入参 x 取整，即单纯地转化为int型</strong></p>
+<p><strong>2、若 x 为 str，则 base 可略可有。</strong></p>
+<p><strong>base 存在时，<code>视 x 为 base 类型数字</code>，并将其转换为 10 进制数字。</strong></p>
+<p><strong>若 x 不符合 base 规则，则报错。如:</strong></p>
+<p><code>&gt;&gt;&gt; int(&quot;0xa&quot;,16)
+10</code></p>
+<p><code>&gt;&gt;&gt; int(&quot;0xa&quot;,2)</code></p>
+<p><code>报错</code></p>
+<p><code>&gt;&gt;&gt; int(&quot;a&quot;,16)
+10</code></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
@@ -158,7 +221,7 @@
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1、requests"><span class="toc-number">2.</span> <span class="toc-text">1、requests</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1）、安装、导入模块"><span class="toc-number">2.0.1.</span> <span class="toc-text">1）、安装、导入模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-、发送请求"><span class="toc-number">2.0.2.</span> <span class="toc-text">2)、发送请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3）、为url传参"><span class="toc-number">2.0.3.</span> <span class="toc-text">3）、为url传参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4）、获取相应内容"><span class="toc-number">2.0.4.</span> <span class="toc-text">4）、获取相应内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5）、自定义请求头"><span class="toc-number">2.0.5.</span> <span class="toc-text">5）、自定义请求头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、响应"><span class="toc-number">2.0.6.</span> <span class="toc-text">6、响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7）、设置秒数超时"><span class="toc-number">2.0.7.</span> <span class="toc-text">7）、设置秒数超时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8）、设置会话对象"><span class="toc-number">2.0.8.</span> <span class="toc-text">8）、设置会话对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10）、代理"><span class="toc-number">2.0.9.</span> <span class="toc-text">10）、代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11）、上传文件"><span class="toc-number">2.0.10.</span> <span class="toc-text">11）、上传文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12）、身份验证"><span class="toc-number">2.0.11.</span> <span class="toc-text">12）、身份验证</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、re标准库"><span class="toc-number">3.</span> <span class="toc-text">2、re标准库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1）、主要功能函数"><span class="toc-number">3.0.1.</span> <span class="toc-text">1）、主要功能函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2）、re库-的对象"><span class="toc-number">3.0.2.</span> <span class="toc-text">2）、re库 的对象</span></a></li></ol></li></ol></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#引言"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1、requests"><span class="toc-number">2.</span> <span class="toc-text">1、requests</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1）、安装、导入模块"><span class="toc-number">2.0.1.</span> <span class="toc-text">1）、安装、导入模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-、发送请求"><span class="toc-number">2.0.2.</span> <span class="toc-text">2)、发送请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3）、为url传参"><span class="toc-number">2.0.3.</span> <span class="toc-text">3）、为url传参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4）、获取相应内容"><span class="toc-number">2.0.4.</span> <span class="toc-text">4）、获取相应内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5）、自定义请求头"><span class="toc-number">2.0.5.</span> <span class="toc-text">5）、自定义请求头</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、响应"><span class="toc-number">2.0.6.</span> <span class="toc-text">6、响应</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7）、设置秒数超时"><span class="toc-number">2.0.7.</span> <span class="toc-text">7）、设置秒数超时</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8）、设置会话对象"><span class="toc-number">2.0.8.</span> <span class="toc-text">8）、设置会话对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10）、代理"><span class="toc-number">2.0.9.</span> <span class="toc-text">10）、代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#11）、上传文件"><span class="toc-number">2.0.10.</span> <span class="toc-text">11）、上传文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12）、身份验证"><span class="toc-number">2.0.11.</span> <span class="toc-text">12）、身份验证</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、re标准库"><span class="toc-number">3.</span> <span class="toc-text">2、re标准库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1）、主要功能函数"><span class="toc-number">3.0.1.</span> <span class="toc-text">1）、主要功能函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2）、re库-的对象"><span class="toc-number">3.0.2.</span> <span class="toc-text">2）、re库 的对象</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、hashlib"><span class="toc-number">4.</span> <span class="toc-text">3、hashlib</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1）简介"><span class="toc-number">4.1.</span> <span class="toc-text">1）简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2）MD5"><span class="toc-number">4.2.</span> <span class="toc-text">2）MD5</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3）SHA1"><span class="toc-number">4.3.</span> <span class="toc-text">3）SHA1</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、BeautifulSoup"><span class="toc-number">5.</span> <span class="toc-text">4、BeautifulSoup</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-安装"><span class="toc-number">5.1.</span> <span class="toc-text">1) 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-导入"><span class="toc-number">5.2.</span> <span class="toc-text">2)导入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-用法"><span class="toc-number">5.3.</span> <span class="toc-text">3)用法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、函数：filter"><span class="toc-number">6.</span> <span class="toc-text">5、函数：filter</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、函数：lambda"><span class="toc-number">7.</span> <span class="toc-text">6、函数：lambda</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7、函数：map"><span class="toc-number">8.</span> <span class="toc-text">7、函数：map</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8、函数：进制转换"><span class="toc-number">9.</span> <span class="toc-text">8、函数：进制转换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-hex-amp-oct-amp-bin"><span class="toc-number">9.1.</span> <span class="toc-text">1)hex &amp; oct &amp; bin</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-int"><span class="toc-number">9.2.</span> <span class="toc-text">2)int()</span></a></li></ol></li></ol>	
         </div>
     
 </div>
