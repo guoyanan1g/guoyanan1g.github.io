@@ -5,14 +5,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>web总结 - Guoyanan</title>
+    <title>tplmap安装问题解决 - Guoyanan</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="Expect Us,1、粗略的WEB体系
-
-2、HTTP协议1、是什么HTTP协议定义Web客户端如何从Web服务器请求Web页面，以及服务器如何把Web页面传送给客户端。HTTP协议采用了请求/响应模型。客户端向服务,"> 
+    <meta name="description" content="Expect Us,记一次安装tplmap使用时的坑：​    该程序要用python2运行 ，但是他会提示我没有安装yaml (import error)
+​    首先看了二向箔的博客，说是要用pip instal,"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -42,7 +41,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
     <div title="播放/暂停" class="iconfont icon-play"></div>
-    <h3 class="subtitle">web总结</h3>
+    <h3 class="subtitle">tplmap安装问题解决</h3>
     <div class="social">
         <div>
             <div class="share">
@@ -57,36 +56,29 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">web总结</h1>
+        <h1 class="title">tplmap安装问题解决</h1>
         <div class="stuff">
-            <span>五月 22, 2020</span>
+            <span>一月 19, 2021</span>
             
 
         </div>
         <div class="content markdown">
-            <h1 id="1、粗略的WEB体系"><a href="#1、粗略的WEB体系" class="headerlink" title="1、粗略的WEB体系"></a><em>1、粗略的WEB体系</em></h1><p><img src="https://s1.ax1x.com/2020/05/22/YXa0OO.png" alt=""></p>
-<p><img src="https://s1.ax1x.com/2020/08/07/ah5Uv4.png" alt=""></p>
-<h1 id="2、HTTP协议"><a href="#2、HTTP协议" class="headerlink" title="2、HTTP协议"></a><em>2、HTTP协议</em></h1><h2 id="1、是什么"><a href="#1、是什么" class="headerlink" title="1、是什么"></a><em>1、是什么</em></h2><p><strong>HTTP协议<code>定义</code>Web客户端如何从Web服务器请求Web页面，以及服务器如何把Web页面传送给客户端。HTTP协议采用了<code>请求/响应模型</code>。客户端向服务器发送一个请求报文，请求报文包含请求的方法、URL、协议版本、请求头部和请求数据。服务器以一个状态行作为响应，响应的内容包括协议的版本、成功或者错误代码、服务器信息、响应头部和响应数</strong></p>
-<p><strong>例如：在浏览器地址栏键入URL，按下回车之后会经历以下流程：</strong></p>
-<ol>
-<li><strong>浏览器向 DNS 服务器请求解析该 URL 中的域名所对应的 IP 地址;</strong></li>
-<li><strong>解析出 IP 地址后，根据该 IP 地址和默认端口 80，和服务器建立TCP连接;</strong></li>
-<li><strong>浏览器发出读取文件(URL 中域名后面部分对应的文件)的HTTP 请求，该请求报文作为 TCP 三次握手<code>(TCP为了对每次发送的数据量进行跟踪与协商，确保数据段的发送和接收同步，根据所接收到的数据量而确认数据发送、接收完毕后何时撤消联系，并建立虚连接)</code>的第三个报文的数据发送给服务器;</strong></li>
-<li><strong>服务器对浏览器请求作出响应，并把对应的 html 文本发送给浏览器;</strong></li>
-<li><strong>释放 TCP连接;</strong></li>
-<li>*<em>浏览器将该 html 文本并显示内容; *</em>　</li>
-</ol>
-<h2 id="2、请求方法"><a href="#2、请求方法" class="headerlink" title="2、请求方法"></a><em>2、请求方法</em></h2><h2 id="3、状态码"><a href="#3、状态码" class="headerlink" title="3、状态码"></a><em>3、状态码</em></h2><h2 id="4、URL"><a href="#4、URL" class="headerlink" title="4、URL"></a><em>4、URL</em></h2><p><strong>以<code>http://www.baidu.com:8000/news/index.html?id=250&amp;page=1</code>为例, 其中：</strong></p>
-<p><strong>http，是协议；</strong></p>
-<ul>
-<li><strong><code>www.baidu.com</code>，是服务器；</strong></li>
-<li><strong>8000，是服务器上的默认网络端口号，默认不显示；</strong></li>
-<li><strong>/news/index.html，是路径（URI：直接定位到对应的资源）；</strong></li>
-<li><strong>?id=250&amp;page=1，是查询。</strong></li>
-<li><strong>大多数网页浏览器不要求用户输入网页中“http://”的部分，因为绝大多数网页内容是超文本传输协议文件。同样，“80”是超文本传输协议文件的常用端口号，因此一般也不必写明。一般来说用户只要键入统一资源定位符的一部分（<code>www.baidu.com/news/index.html?id=250&amp;page=1</code>）就可以了</strong></li>
-</ul>
-<p><strong>由于超文本传输协议允许服务器将浏览器重定向到另一个网页地址，因此许多服务器允许用户省略网页地址中的部分，比如 www。从技术上来说这样省略后的网页地址实际上是一个不同的网页地址，浏览器本身无法决定这个新地址是否通，服务器必须完成重定向的任务。</strong></p>
-<h2 id="5、请求头"><a href="#5、请求头" class="headerlink" title="5、请求头"></a><em>5、请求头</em></h2><h2 id="6、响应头"><a href="#6、响应头" class="headerlink" title="6、响应头"></a><em>6、响应头</em></h2>
+            <h2 id="记一次安装tplmap使用时的坑："><a href="#记一次安装tplmap使用时的坑：" class="headerlink" title="记一次安装tplmap使用时的坑："></a>记一次安装tplmap使用时的坑：</h2><p>​    该程序要用python2运行 ，但是他会提示我没有安装yaml <code>(import error)</code></p>
+<p>​    首先看了二向箔的博客，说是要用<code>pip install -r requirements</code>提供依赖环境，这个好理解。</p>
+<p>​    尝试之后，提示我error：没有这个文件。</p>
+<p>​    于是解决这个文件的问题，全局搜索没有找到，后来找到一篇博客，说是要先创建一下：</p>
+<p><code>pip freeze &gt; requirements.txt</code></p>
+<p>然后再执行<code>pip install -r requirements.txt</code> </p>
+<p>​    解决了这个问题，再来解决yaml的问题。</p>
+<p>​    得用pip安装；但是我py2没有pip，所以又得下载。注意，要在py2下下载pip。很多系统默认只给py3安装pip。</p>
+<p>python2 安装pip：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">url https:&#x2F;&#x2F;bootstrap.pypa.io&#x2F;get-pip.py -o get-pip.py</span><br><span class="line">python2 get-pip.py</span><br></pre></td></tr></table></figure>
+
+<p>然后头疼的问题出现了<br><code>python2 -m pip install yaml</code>时<br>提示没有<code>yaml</code>这个包<br>找了半天解决方案发现，<code>pyyaml</code>可以让我去导入<code>yaml</code>，二者等同。</p>
+<p>​    以下是国外一大佬给出的解释：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pip install pyyaml可让您import yaml。 This package使Python能够解析YAML文件。</span><br><span class="line">pip install pyaml可让您import pyaml。 This package允许从Python中漂亮打印YAML文件等。它需要安装pyyaml。</span><br></pre></td></tr></table></figure>
+
+
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
                 <source type="audio/mpeg" src="">
@@ -121,7 +113,7 @@
     </div>
     
         <div class='side'>
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、粗略的WEB体系"><span class="toc-number">1.</span> <span class="toc-text">1、粗略的WEB体系</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、HTTP协议"><span class="toc-number">2.</span> <span class="toc-text">2、HTTP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、是什么"><span class="toc-number">2.1.</span> <span class="toc-text">1、是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、请求方法"><span class="toc-number">2.2.</span> <span class="toc-text">2、请求方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、状态码"><span class="toc-number">2.3.</span> <span class="toc-text">3、状态码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、URL"><span class="toc-number">2.4.</span> <span class="toc-text">4、URL</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、请求头"><span class="toc-number">2.5.</span> <span class="toc-text">5、请求头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、响应头"><span class="toc-number">2.6.</span> <span class="toc-text">6、响应头</span></a></li></ol></li></ol>	
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#记一次安装tplmap使用时的坑："><span class="toc-number">1.</span> <span class="toc-text">记一次安装tplmap使用时的坑：</span></a></li></ol>	
         </div>
     
 </div>
