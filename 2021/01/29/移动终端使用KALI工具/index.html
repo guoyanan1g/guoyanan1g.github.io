@@ -5,12 +5,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Archive</title>
+    <title>移动终端使用KALI工具 - Guoyanan</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="Expect Us,"> 
+    <meta name="description" content="Expect Us,最近想用手机去做一些事情，但是安卓上的工具不太了解，于是干脆 直接用安卓连kali了。（主要在学校连校园网的话比较方便，不用带着电脑跑来跑去了）
+首先准备一块网卡，给kali一个独立的内网IP。当然,"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -35,51 +36,87 @@
 <body class="loading">
     <span id="config-title" style="display:none">Guoyanan</span>
     <div id="loader"></div>
-    <div id="single" class="page">
-    <div id="top">
-        <a class="iconfont icon-left image-icon" href="javascript:history.back()"></a>
-    </div>
-    <div class="section">
-        <div class="article">
-            <div class="main">
-                <div class="content">
-                    <div class="timeline">
-                      <h2 class="timeline-title">归档: 4篇</h2><hr>
-                      
-                      
-                        
-                          <h3 class="timeline-subtitle">2021</h3>
-                        
-                        <div class="timeline-item">
-                          <time>2021-01-29</time>
-                          <a target="_self" href="/2021/01/29/%E7%A7%BB%E5%8A%A8%E7%BB%88%E7%AB%AF%E4%BD%BF%E7%94%A8KALI%E5%B7%A5%E5%85%B7/">移动终端使用KALI工具</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2021-01-21</time>
-                          <a target="_self" href="/2021/01/21/node%20js%E5%AE%9E%E7%8E%B0%E9%82%AE%E4%BB%B6%E8%BD%B0%E7%82%B8%E5%8A%9F%E8%83%BD/">node js实现邮件轰炸功能</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2021-01-19</time>
-                          <a target="_self" href="/2021/01/19/%E7%90%86%E8%A7%A3js%E5%8E%9F%E5%9E%8B%E9%93%BE%E5%8F%8A%E5%85%B6%E6%B1%A1%E6%9F%93/">理解js原型链及其污染</a>
-                        </div>
-                      
-                        
-                        <div class="timeline-item">
-                          <time>2021-01-19</time>
-                          <a target="_self" href="/2021/01/19/tplmap%E5%AE%89%E8%A3%85%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/">tplmap安装问题解决</a>
-                        </div>
-                      
-                    </div>
-                </div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">移动终端使用KALI工具</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
             </div>
+            <div id="qr"></div>
         </div>
     </div>
+    <div class="scrollbar"></div>
 </div>
 
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">移动终端使用KALI工具</h1>
+        <div class="stuff">
+            <span>一月 29, 2021</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>最近想用手机去做一些事情，但是安卓上的工具不太了解，于是干脆 直接用安卓连kali了。（主要在学校连校园网的话比较方便，不用带着电脑跑来跑去了）</p>
+<p>首先准备一块网卡，给kali一个独立的内网IP。当然也可以不用网卡，设置一个端口转发就行。</p>
+<p><a href="https://imgchr.com/i/yix3T0" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/01/29/yix3T0.png" alt="yix3T0.png"></a></p>
+<p>有了内网ip，然后得做一件事，就是关闭防火墙。</p>
+<p><code>ufw disable</code></p>
+<p>启动ssh服务</p>
+<p><code>service ssh start //默认22端口</code></p>
+<p>可以用nmap扫一下，扫出结果的话就可以了。</p>
+<p>我用的是安卓，用JuiceSSH新建一个连接。</p>
+<p><a href="https://imgchr.com/i/yixdX9" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/01/29/yixdX9.jpg" alt="yixdX9.jpg" style="zoom: 33%;" /></a></p>
+<p><a href="https://imgchr.com/i/yixytK" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/01/29/yixytK.jpg" alt="yixytK.jpg" style="zoom: 33%;" /></a></p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                        
+                            <li title='0' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                        
+                            <li title='1' data-url='http://link.hhtjim.com/163/425570952.mp3'></li>
+                        
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+				
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
 </body>
 
 <script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
