@@ -5,13 +5,12 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>移动终端使用KALI工具 - Guoyanan</title>
+    <title>运维安全系列(一)配置本地yum源 - Guoyanan</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="google" content="notranslate" />
     <meta name="keywords" content="Fechin,"> 
-    <meta name="description" content="Expect Us,最近想用手机去做一些事情，但是安卓上的工具不太了解，于是干脆 直接用安卓连kali了。（主要在学校连校园网的话比较方便，不用带着电脑跑来跑去了）
-首先准备一块网卡，给kali一个独立的内网IP。当然,"> 
+    <meta name="description" content="Expect Us,本地yum源配置yum源实际上就是集成了许多RPM包的服务器。大多数小伙伴在使用yum时，一般都是使用网络yum源，然而，很多时候我们的yum需要在断网情况下使用。一些公司也都会有自己的yum源。本,"> 
     <meta name="author" content="John Doe"> 
     <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
     <link rel="icon" href="/img/favicon.png"> 
@@ -41,7 +40,7 @@
     <div class="bar" style="width: 0;"></div>
     <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
     <div title="播放/暂停" class="iconfont icon-play"></div>
-    <h3 class="subtitle">移动终端使用KALI工具</h3>
+    <h3 class="subtitle">运维安全系列(一)配置本地yum源</h3>
     <div class="social">
         <div>
             <div class="share">
@@ -56,24 +55,44 @@
     <div class="section">
         <div class="article">
     <div class='main'>
-        <h1 class="title">移动终端使用KALI工具</h1>
+        <h1 class="title">运维安全系列(一)配置本地yum源</h1>
         <div class="stuff">
-            <span>一月 29, 2021</span>
+            <span>二月 07, 2021</span>
             
 
         </div>
         <div class="content markdown">
-            <p>最近想用手机去做一些事情，但是安卓上的工具不太了解，于是干脆 直接用安卓连kali了。（主要在学校连校园网的话比较方便，不用带着电脑跑来跑去了）</p>
-<p>首先准备一块网卡，给kali一个独立的内网IP。当然也可以不用网卡，设置一个端口转发就行。</p>
-<p><a href="https://imgchr.com/i/yix3T0" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/01/29/yix3T0.png" alt="yix3T0.png"></a></p>
-<p>有了内网ip，然后得做一件事，就是关闭防火墙。</p>
-<p><code>ufw disable</code></p>
-<p>启动ssh服务</p>
-<p><code>service ssh start //默认22端口</code></p>
-<p>可以用nmap扫一下，扫出结果的话就可以了。</p>
-<p>我用的是安卓，用JuiceSSH新建一个连接。</p>
-<p><a href="https://imgchr.com/i/yixdX9" target="_blank" rel="noopener"></a></p>
-<p><a href="https://imgchr.com/i/yixytK" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/01/29/yixytK.jpg" alt="yixytK.jpg" style="zoom: 33%;" /></a></p>
+            <h2 id="本地yum源配置"><a href="#本地yum源配置" class="headerlink" title="本地yum源配置"></a>本地yum源配置</h2><p>yum源实际上就是集成了许多RPM包的服务器。大多数小伙伴在使用yum时，一般都是使用网络yum源，然而，很多时候我们的yum需要在断网情况下使用。一些公司也都会有自己的yum源。本文将描述如何配置本地的yum源。</p>
+<p>首先得有一个镜像文件并挂载在一个空目录下：</p>
+<p><a href="https://imgchr.com/i/yNgF54" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/02/07/yNgF54.png" alt="yNgF54.png"></a></p>
+<p>如果已经有了这个东西，说明已经挂载，直接进入下一步。</p>
+<p>可在vm的设置里勾选两个连接来实现挂载。</p>
+<p><a href="https://imgchr.com/i/yNgmKx" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/02/07/yNgmKx.png" alt="yNgmKx.png"></a></p>
+<p>执行<code>df -h</code></p>
+<p>有最后一行说明成功挂载：</p>
+<p><a href="https://imgchr.com/i/yNguqK" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/02/07/yNguqK.png" alt="yNguqK.png"></a></p>
+<p>如果不靠vm工具的话也可以。首先，将准备好的相应系统iso上传到主机上，</p>
+<p>然后进行手动挂载：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># mkdir &#x2F;var&#x2F;yum_iso</span><br><span class="line"></span><br><span class="line"># mount -o loop CentOS.xxxxxx.iso &#x2F;var&#x2F;iso</span><br></pre></td></tr></table></figure>
+
+
+
+<p>然后我们要做的是告诉yum工具去哪个仓库找相应软件包，</p>
+<p>yum的配置信息放在<code>/etc/yum.repos.d</code>目录下。</p>
+<p>以下为默认软件包：</p>
+<p><a href="https://imgchr.com/i/yNglIe" target="_blank" rel="noopener"><img src="https://s3.ax1x.com/2021/02/07/yNglIe.png" alt="yNglIe.png"></a></p>
+<p>先备份已有的repo：</p>
+<p><code>mkdir backup</code></p>
+<p><code>mv *.repo backup/</code></p>
+<p>创建我们自己的repo：</p>
+<p><code>vim self.repo</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[local-yum]</span><br><span class="line">name&#x3D;Repo of 1g   #仓库名</span><br><span class="line">baseurl&#x3D;file:&#x2F;&#x2F;挂载的目录。例如我的是&#x2F;run&#x2F;media.....（可用df -h查看） #仓库路径</span><br><span class="line">enabled&#x3D;1   #1:开启 0：关闭</span><br><span class="line">gpgcheck&#x3D;0  #不需要校验</span><br></pre></td></tr></table></figure>
+
+<p>保存退出即可。</p>
+<p>随后执行</p>
+<p><code>yum clean all  //清空缓存</code></p>
+<p><code>yum makecache //创建缓存，可有可无</code></p>
+<p>再执行<code>yum install</code>的时候，yum也会重新生成缓存。</p>
 
             <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
             <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
@@ -101,7 +120,7 @@
     </div>
     
         <div class='side'>
-				
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#本地yum源配置"><span class="toc-number">1.</span> <span class="toc-text">本地yum源配置</span></a></li></ol>	
         </div>
     
 </div>
