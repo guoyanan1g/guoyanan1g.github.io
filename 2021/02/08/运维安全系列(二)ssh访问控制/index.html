@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>运维安全系列(二)ssh访问控制 - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,需求一：修改server机的默认ssh端口1、配置文件及修改vim /etc/ssh/sshd_config
+1234567找到这一段：#Port 22#AddressFamily any#List,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">运维安全系列(二)ssh访问控制</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">运维安全系列(二)ssh访问控制</h1>
+        <div class="stuff">
+            <span>二月 08, 2021</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="需求一：修改server机的默认ssh端口"><a href="#需求一：修改server机的默认ssh端口" class="headerlink" title="需求一：修改server机的默认ssh端口"></a>需求一：修改server机的默认ssh端口</h2><h3 id="1、配置文件及修改"><a href="#1、配置文件及修改" class="headerlink" title="1、配置文件及修改"></a>1、配置文件及修改</h3><p><code>vim /etc/ssh/sshd_config</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">找到这一段：</span><br><span class="line">#Port 22</span><br><span class="line">#AddressFamily any</span><br><span class="line">#ListenAddress 0.0.0.0</span><br><span class="line">#ListenAddress ::</span><br><span class="line"></span><br><span class="line">将 #Port 22 修改为 Port 9090 &#x2F;&#x2F;自定义的端口</span><br></pre></td></tr></table></figure>
+
+<p><code>service sshd restart</code></p>
+<h2 id="需求二：禁止ROOT用户远程登陆"><a href="#需求二：禁止ROOT用户远程登陆" class="headerlink" title="需求二：禁止ROOT用户远程登陆"></a>需求二：禁止ROOT用户远程登陆</h2><h3 id="1、配置文件及修改-1"><a href="#1、配置文件及修改-1" class="headerlink" title="1、配置文件及修改"></a>1、配置文件及修改</h3><p><code>vim /etc/ssh/sshd_config</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">找到：</span><br><span class="line">#LoginGraceTime 2m</span><br><span class="line">#PermitRootLogin yes</span><br><span class="line">#StrictModes yes</span><br><span class="line">#MaxAuthTries 6</span><br><span class="line">#MaxSessions 10</span><br><span class="line"></span><br><span class="line">将 #PermitRootLogin yes 修改为 PermitRootLogin no</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="需求三：服务器端的ssh服务对特定主机关闭"><a href="#需求三：服务器端的ssh服务对特定主机关闭" class="headerlink" title="需求三：服务器端的ssh服务对特定主机关闭"></a>需求三：服务器端的ssh服务对特定主机关闭</h2><h3 id="1、两个配置文件"><a href="#1、两个配置文件" class="headerlink" title="1、两个配置文件"></a>1、两个配置文件</h3><p>以centos为例。</p>
+<p>在<code>/etc/</code>下，有两个文件，分别是<code>hosts.allow</code>和<code>hosts.deny</code>。顾名思义，一个是允许，一个是禁止。为了实现这个需求，我们需要使用这两个文件。</p>
+<h3 id="2、TCP-Wrappers"><a href="#2、TCP-Wrappers" class="headerlink" title="2、TCP_Wrappers"></a>2、TCP_Wrappers</h3><p>首先理解它们的原理。</p>
+<p>我们知道，ssh是传输层的协议。而在linux中，位于传输层的TCP协议有一个<code>TCP_Wrappers</code>功能。</p>
+<p><code>TCP_Wrappers:对有状态连接的特定服务进行安全检测并实现访问控制
+ 以库文件形式实现</code></p>
+<p>如何证明这一点呢？我们可以使用ldd命令(<code>list, dynamic, dependencies</code>)来查看库文件的依赖关系。</p>
+<p><code>ldd /usr/sbin/sshd |grep libwrap</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost sbin]# ldd &#x2F;usr&#x2F;sbin&#x2F;sshd |grep libwrap</span><br><span class="line">	libwrap.so.0 &#x3D;&gt; &#x2F;lib64&#x2F;libwrap.so.0 (0x00007f5b172a6000)</span><br></pre></td></tr></table></figure>
+
+<p>出现这个结果，说明我们的ssh服务是受这个功能控制的。</p>
+<p>ps：在以后类似的情况，也可用这种方法来查看依赖关系。</p>
+<h3 id="3、配置修改"><a href="#3、配置修改" class="headerlink" title="3、配置修改"></a>3、配置修改</h3><p>首先，我们查看两个配置文件的内容。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost sbin]# cat &#x2F;etc&#x2F;hosts.allow </span><br><span class="line">#</span><br><span class="line"># hosts.allow	This file contains access rules which are used to</span><br><span class="line">#		allow or deny connections to network services that</span><br><span class="line">#		either use the tcp_wrappers library or that have been</span><br><span class="line">#		started through a tcp_wrappers-enabled xinetd.</span><br><span class="line">#</span><br><span class="line">#		See &#39;man 5 hosts_options&#39; and &#39;man 5 hosts_access&#39;</span><br><span class="line">#		for information on rule syntax.</span><br><span class="line">#		See &#39;man tcpd&#39; for information on tcp_wrappers</span><br><span class="line">#</span><br></pre></td></tr></table></figure>
+
+<p>系统给了我们提示，用man 5去查看手册。于是照做。找到用法实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;etc&#x2F;hosts.allow:</span><br><span class="line">          ALL: LOCAL @some_netgroup</span><br><span class="line">          ALL: .foobar.edu EXCEPT terminalserver.foobar.edu</span><br><span class="line">          </span><br><span class="line">&#x2F;etc&#x2F;hosts.deny:</span><br><span class="line">          ALL: some.host.name, .some.domain</span><br><span class="line">          ALL EXCEPT in.fingerd: other.host.name, .other.domain</span><br></pre></td></tr></table></figure>
+
+<p>前面的ALL代表<code>所有服务</code>，冒号后面的则代表主机ip，注意，这里可以用网段(<code>ip/子网掩码</code>)的形式！并且可以在网段后加上except来阻止/允许网段中部分主机的访问。</p>
+<p>于是开始修改：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#vim &#x2F;etc&#x2F;hosts.deny</span><br><span class="line"></span><br><span class="line">sshd:192.168.x.y</span><br><span class="line">sshd:192.168.x.z&#x2F;255.255.255.0 EXCEPT 192.168.$.$</span><br><span class="line">......</span><br><span class="line">&#x2F;&#x2F;这里只修改了ssh服务的权限，也可以修改其它的服务:例如sshd,vsftpd:xxxx</span><br><span class="line">&#x2F;&#x2F;记得实验时关闭服务机的防火墙：service iptables stop</span><br></pre></td></tr></table></figure>
+
+<p>需求完成。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#需求一：修改server机的默认ssh端口"><span class="toc-number">1.</span> <span class="toc-text">需求一：修改server机的默认ssh端口</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、配置文件及修改"><span class="toc-number">1.1.</span> <span class="toc-text">1、配置文件及修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求二：禁止ROOT用户远程登陆"><span class="toc-number">2.</span> <span class="toc-text">需求二：禁止ROOT用户远程登陆</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、配置文件及修改-1"><span class="toc-number">2.1.</span> <span class="toc-text">1、配置文件及修改</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#需求三：服务器端的ssh服务对特定主机关闭"><span class="toc-number">3.</span> <span class="toc-text">需求三：服务器端的ssh服务对特定主机关闭</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、两个配置文件"><span class="toc-number">3.1.</span> <span class="toc-text">1、两个配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、TCP-Wrappers"><span class="toc-number">3.2.</span> <span class="toc-text">2、TCP_Wrappers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、配置修改"><span class="toc-number">3.3.</span> <span class="toc-text">3、配置修改</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
