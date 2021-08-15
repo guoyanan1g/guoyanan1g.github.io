@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>智能合约概述及其安全 - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,前言​    区块链2.0的兴起与延伸，依赖于智能合约这个概念。
+​    智能合约本质就是一段代码。由高级语言所编写, 之后被编译为字节码, 并由区块链交易驱动, 在以区块链作为存储基础的虚拟机上,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">智能合约概述及其安全</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">智能合约概述及其安全</h1>
+        <div class="stuff">
+            <span>八月 15, 2021</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​    区块链2.0的兴起与延伸，依赖于智能合约这个概念。</p>
+<p>​    智能合约本质就是一段代码。由高级语言所编写, 之后被编译为字节码, 并由区块链交易驱动, 在以区块链作为存储基础的虚拟机上运行。</p>
+<p>​    虚拟机是编译后的智能合约字节码执行器。以太坊的虚拟机及其字节码的设计规范被定义在以太坊技术黄皮书中, 是各种以太坊客户端实现以太坊虚拟机的标准指导手册。</p>
+<p>​    以太坊虚拟机是一个无寄存器、基于栈式运行的虚拟机。以太坊虚拟机为智能合约程序提供了三种不用的存储空间, 分别为<strong>栈(Stack)、临时内存(Memory)和永久存储(Storage)</strong>。从使用场景来讲,  Stack和Memory是临时存储, 其存储结果仅在当前智能合约被调用期间有效, 调用结束后空间便会被回收, 仅作为程序运行时的临时存储区域使用; 而Storage的存储结果则是永久生效的, 其用于保存智能合约中需要被永久保存的重要全局变量, 是区块链状态的一部分。其中, Stack和Memory的区别又在于,  Stack作为程序运行时的必要组件, 用于保存程序运行时的各种临时数据, 以32字节作为访问粒度; 而Memory则主要用于保存数组、字符串等较大的临时数据, 以单字节作为访问粒度, 更加灵活。智能合约代码存储在区块链状态中, 包含一个函数选择器和若干函数入口, 每个函数都有自己的参数列表。当虚拟机执行某个合约代码时, 会从交易数据中读取待执行的函数签名及其参数列表, 并启动合约代码的执行。虚拟机在合约的执行过程中, 便会使用Stack、Memory和Storage三种不同的存储空间。</p>
+<p>​    虚拟机层面的安全威胁主要有两个方面, 一是以太坊黄皮书设计智能合约字节码规范和运行机制本身的一些缺陷, 二是不同的以太坊客户端在实现虚拟机的过程中, 因没有严格按照手册实现而引入的问题。</p>
+<p>​    目前，最受欢迎的智能合约语言是基于以太坊的solidity。</p>
+<p>​    一个简单的智能合约如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;hello.sol</span><br><span class="line">pragma solidity ^0.4.0;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">contract HelloWorld&#123; &#x2F;&#x2F;一个智能合约就是一个这样的对象</span><br><span class="line">    string myname&#x3D;&quot;hello&quot;;</span><br><span class="line">    </span><br><span class="line">    function getname() public view returns(string)&#123;</span><br><span class="line">        return myname;</span><br><span class="line">    &#125;</span><br><span class="line">    function changename(string _newname) public&#123;</span><br><span class="line">        myname&#x3D;_newname;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    由于solidity是弱类型语言，所以其语言层面就存在着安全问题。</p>
+<p>​    这里主要介绍几个经典漏洞。</p>
+<h1 id="1、重入漏洞"><a href="#1、重入漏洞" class="headerlink" title="1、重入漏洞"></a>1、重入漏洞</h1><p>数据库中，最重要的就是事务的执行，而事务具有ACID的特性。</p>
+<p>这个漏洞就是利用某种手段破坏了事务的<strong>原子性</strong>。</p>
+<p><strong>“修改Storage变量并转帐”</strong>的操作很显然是一个事务，但在某些粗心者开发的合约中, 采用了<strong>先转账再修改Storage变量</strong>的顺序。</p>
+<p>对于这样的合约，如果转账的目标是一个带有恶意fallback函数的合约, 则可能会被恶意合约对受害合约发起递归调用, 从而破坏操作的原子性, 绕过检查以重复获得转账收益。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fallback函数：</span><br><span class="line">合约可以有一个未命名的函数 —— Fallback 函数。这个函数不能有参数也不能有返回值。</span><br><span class="line">每当合约收到以太币（没有任何数据），这个函数就会执行。此外，为了接收以太币，fallback 函数必须标记为 payable。如果不存在这样的函数，则合约不能通过常规交易接收以太币。</span><br><span class="line">另外，如果在一个到合约的调用中，没有其他函数与给定的函数标识符匹配（或没有提供调用数据），那么这个函数（fallback 函数）也会被执行。</span><br></pre></td></tr></table></figure>
+
+<p>经典的ERCToken实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">转账者部署的合约：</span><br><span class="line">contract ERCToken&#123;  </span><br><span class="line">... </span><br><span class="line">function  withdraw(uint  amount)  public  returns  (bool) </span><br><span class="line">&#123;         </span><br><span class="line">if  (credit[msg.sender]&gt;&#x3D;  amount)  &#123; &#x2F;&#x2F;检查账户余额是否大于转账金额             </span><br><span class="line">	msg.sender.call.value(amount)();  &#x2F;&#x2F;转账     </span><br><span class="line">	credit[msg.sender]-&#x3D;amount;       &#x2F;&#x2F;扣款     </span><br><span class="line">	emit  Withdraw(msg.sender,  amount);        &#x2F;&#x2F;提交事务</span><br><span class="line">	return true;     </span><br><span class="line">	&#125;         </span><br><span class="line">	return  false;      </span><br><span class="line">&#125;    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果收到转账的地址是一个合约地址, 便会触发该地址的fallback函数, 该机制则可能被恶意的攻击者用于发起重入攻击。Attack是一个攻击合约, 其代码如下所示: </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">攻击者部署的合约：</span><br><span class="line">contract Attack&#123; </span><br><span class="line">... </span><br><span class="line">function hack() public </span><br><span class="line">&#123;         </span><br><span class="line">erctoken.withdraw(1);    </span><br><span class="line">&#125; </span><br><span class="line">function() public payable &#123; </span><br><span class="line">&#x2F;&#x2F;fallback函数        </span><br><span class="line">erctoken.withdraw(1);      </span><br><span class="line">&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这里，转账者刚执行了函数的第一步<code>msg.sender.call.value(amount)();</code>，触发了收款者的fallback函数，而fallback函数又要调用withdraw函数，那么转账者还没执行第二步的扣款，就又要从头执行函数，因为满足转账条件，所以又要进行第一步的转账。。。。就这样循环下去，直到转账者的gas被耗尽为止。</p>
+<p>修补建议：</p>
+<ul>
+<li><p>将逻辑更改为检查-生效-交互。</p>
+</li>
+<li><p>添加重入锁，确保事务的原子性。</p>
+</li>
+<li><p>避免使用外部调用。</p>
+</li>
+<li><p>transfer()代替call.value()</p>
+</li>
+</ul>
+<h1 id="2、整数溢出"><a href="#2、整数溢出" class="headerlink" title="2、整数溢出"></a>2、整数溢出</h1><p>​    有计算机基础的都知道，任何设定好的数据类型，都有一个数值的上限，超过就会产生溢出。EVM（以太坊虚拟机）也是如此。</p>
+<p>​    操作时，若操作数据超出了最大值，则发生溢出错误或出现gas不足的情况，此时攻击者有机会滥用代码创建不合理的逻辑流程。</p>
+<p>​    来看一段代码实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function distributeBTR(address[] address) onlyOwner &#123;</span><br><span class="line">    for (uint i &#x3D; 0; i &lt; addresses.length; i++)&#123;</span><br><span class="line">        balances[owner] -&#x3D; 2000 * 10**8;</span><br><span class="line">        balances[address[i]] +&#x3D; 2000 * 10**8;</span><br><span class="line">        Transfer(owner, addresses[i], 2000 * 10**8);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    由于这些变量都是uint，当balances[owner]小于<code>2000*10**8</code>的时候，这个时候balances[owner]就为负数，但是在uint数的表示范围之内，balances[owner]值就变成了一个超级大的数，管理员可以通过这个漏洞对自己的balances进行增加。</p>
+<p>该漏洞需要注意的点：</p>
+<ul>
+<li><strong>可能产生溢出的操作：加(+)、减(-)、乘(x)</strong></li>
+<li><strong>操作数由攻击者可控(函数参数)</strong></li>
+<li><strong>上下文末对高危操作数进行有效校验</strong></li>
+<li><strong>ERC20重点关注balanceOf[]、 allownce[]、 toitalBalance、 totalSupply</strong></li>
+<li><strong>溢出成功不代表一定有危害</strong></li>
+</ul>
+<p>漏洞预防：</p>
+<ul>
+<li><strong>有效的上下文校验</strong><ul>
+<li>require()/assert()/revert()</li>
+</ul>
+</li>
+<li><strong>使用SafeMath</strong><ul>
+<li>调用SafeMath库</li>
+</ul>
+</li>
+</ul>
+<h1 id="3、权限漏洞"><a href="#3、权限漏洞" class="headerlink" title="3、权限漏洞"></a>3、权限漏洞</h1><p>智能合约中变量及函数的声明都需要声明权限，例如：private、public、internal、external</p>
+<ul>
+<li><p>Public函数可以被任何人调用（被合约里的函数、继承合约里的函数、或者外面的用户）。</p>
+</li>
+<li><p>External函数只能从外部访问，意味着它们不能被合约里的其他函数调用。</p>
+</li>
+<li><p>private函数只能在该合约里使用</p>
+</li>
+<li><p>internal函数相比private更宽松，它允许从父合约处继承的子合约使用那个函数。</p>
+</li>
+</ul>
+<p>一些特殊函数也需要通过require、modifier声明其调用的权限</p>
+<p>由于权限配置不合理，而导致被利用。</p>
+<p>（关于public和external使用的区别，可以看下stackoverflow上的一段回答：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">A simple example demonstrating this effect looks like this:</span><br><span class="line"></span><br><span class="line">pragma solidity^0.4.12;</span><br><span class="line"></span><br><span class="line">contract Test &#123;</span><br><span class="line">    function test(uint[20] a) public returns (uint)&#123;</span><br><span class="line">         return a[10]*2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function test2(uint[20] a) external returns (uint)&#123;</span><br><span class="line">         return a[10]*2;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Calling each function, we can see that the public function uses 496 gas, while the external function uses only 261.</span><br><span class="line"></span><br><span class="line">The difference is because in public functions, Solidity immediately copies array arguments to memory, while external functions can read directly from calldata. Memory allocation is expensive, whereas reading from calldata is cheap.</span><br></pre></td></tr></table></figure>
+
+<p>）</p>
+<p>预防建议：</p>
+<ul>
+<li>严格声明函数的权限</li>
+<li>对特殊函通过require、modifier声明权限。</li>
+</ul>
+<h1 id="4、DelegateCall"><a href="#4、DelegateCall" class="headerlink" title="4、DelegateCall"></a>4、DelegateCall</h1><p>​    solidity里的<code>delegatecall</code>函数，与<code>call</code>都是用来进行函数的调用，主要的区别在于二者执行代码的上下文环境的不同，当使用call调用其它合约的函数时，代码是在被调用的合约的环境里执行;对应的，使用delegatecall进行函数调用时代码则是在调用函数的环境里执行。</p>
+<p>​    由于参数可控而导致了漏洞的产生。</p>
+<p>代码实例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">contract vict &#123;</span><br><span class="line"> </span><br><span class="line">  address public owner;</span><br><span class="line"> </span><br><span class="line">  function hack() public &#123; &#x2F;&#x2F;该函数存在漏洞，被调用后会改变主人为调用该函数的人</span><br><span class="line">    owner &#x3D; msg.sender;  &#x2F;&#x2F;msg.sender是一个全局变量，值为调用该函数的用户地址。</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">contract Deletest &#123;</span><br><span class="line"> </span><br><span class="line">  address public owner;</span><br><span class="line">  address Address&#x3D;address of vict;</span><br><span class="line"> </span><br><span class="line">  function Deletest()  &#123;</span><br><span class="line">    owner &#x3D; msg.sender;</span><br><span class="line">  &#125;</span><br><span class="line"> </span><br><span class="line">  function() public &#123;</span><br><span class="line">    Address.delegatecall(msg.data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们只需将data赋值为<code>abi.encodeWithSignature(&quot;hack()&quot;)</code>即可完成owner的更改，为了触发这个fallback函数，我们再和vict的合约部署着发起一笔交易即可。</p>
+<p>参考文献：《智能合约安全漏洞研究综述》  倪远东, 张超, 殷婷婷</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1、重入漏洞"><span class="toc-number">2.</span> <span class="toc-text">1、重入漏洞</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、整数溢出"><span class="toc-number">3.</span> <span class="toc-text">2、整数溢出</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、权限漏洞"><span class="toc-number">4.</span> <span class="toc-text">3、权限漏洞</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、DelegateCall"><span class="toc-number">5.</span> <span class="toc-text">4、DelegateCall</span></a></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
