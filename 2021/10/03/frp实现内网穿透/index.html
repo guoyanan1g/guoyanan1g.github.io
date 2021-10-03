@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>frp实现内网穿透 - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,条件：一台公网vps
+步骤1、服务端配置uname -a
+查看vps架构信息
+如果vps是x86_64位，则直接执行：
+1wget https:&amp;#x2F;&amp;#x2F;github.com&amp;#x2F,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">frp实现内网穿透</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">frp实现内网穿透</h1>
+        <div class="stuff">
+            <span>十月 03, 2021</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <h2 id="条件："><a href="#条件：" class="headerlink" title="条件："></a>条件：</h2><p>一台公网vps</p>
+<h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><h3 id="1、服务端配置"><a href="#1、服务端配置" class="headerlink" title="1、服务端配置"></a>1、服务端配置</h3><p><code>uname -a</code></p>
+<p>查看vps架构信息</p>
+<p>如果vps是x86_64位，则直接执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https:&#x2F;&#x2F;github.com&#x2F;fatedier&#x2F;frp&#x2F;releases&#x2F;download&#x2F;v0.22.0&#x2F;frp_0.22.0_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>否则，在<a href="https://github.com/fatedier/frp/releases/找到所需的版本，下载即可。" target="_blank" rel="noopener">https://github.com/fatedier/frp/releases/找到所需的版本，下载即可。</a></p>
+<p>随后，解压：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf frp_0.22.0_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>之后，进入解压目录下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod 770 frps.ini &#x2F;&#x2F;server的配置文件</span><br><span class="line">vim frps.ini</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">#文件内容如下：</span><br><span class="line">[common]</span><br><span class="line">bind_port &#x3D; 7000</span><br><span class="line">dashboard_port &#x3D; 7500</span><br><span class="line">token &#x3D; password</span><br><span class="line">dashboard_user &#x3D; admin</span><br><span class="line">dashboard_pwd &#x3D; admin123456</span><br></pre></td></tr></table></figure>
+
+<p>“bind_port”表示用于客户端和服务端连接的端口。</p>
+<p>“dashboard_port”是服务端仪表板的端口，若使用7500端口，在配置完成服务启动后可以通过浏览器访问 x.x.x.x:7500 （其中x.x.x.x为VPS的IP）查看frp服务运行信息。</p>
+<p>“token”是用于客户端和服务端连接的口令，需自行设置并记录。</p>
+<p>“dashboard_user”和“dashboard_pwd”表示打开仪表板页面登录的用户名和密码，自行设置即可。</p>
+<p>运行，出现以下结果即可。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> ~&#x2F;frp_0.22.0_linux_amd64  .&#x2F;frps -c frps.ini</span><br><span class="line">2021&#x2F;10&#x2F;03 08:32:45 [I] [service.go:130] frps tcp listen on 0.0.0.0:7000</span><br><span class="line">2021&#x2F;10&#x2F;03 08:32:45 [I] [service.go:172] http service listen on 0.0.0.0:10080</span><br><span class="line">2021&#x2F;10&#x2F;03 08:32:45 [I] [service.go:193] https service listen on 0.0.0.0:10443</span><br><span class="line">2021&#x2F;10&#x2F;03 08:32:45 [I] [service.go:216] Dashboard listen on 0.0.0.0:7500</span><br><span class="line">2021&#x2F;10&#x2F;03 08:32:45 [I] [root.go:210] Start frps success</span><br></pre></td></tr></table></figure>
+
+<p>如果是国内的vps厂商，一般会限制访问7500端口，可在控制台自行设置。</p>
+<p>以腾讯云为例，在防火墙策略添加：</p>
+<p><a href="https://imgtu.com/i/4qYTrn" target="_blank" rel="noopener"><img src="https://z3.ax1x.com/2021/10/03/4qYTrn.jpg" alt="4qYTrn.jpg"></a></p>
+<p>访问<a href="http://vps-ip:7500" target="_blank" rel="noopener">http://vps-ip:7500</a> 输入用户名和密码，进入控制面板说明成功配置。</p>
+<p>后台运行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nohup .&#x2F;frps -c frps.ini &amp;</span><br><span class="line">jobs</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="2、客户端配置"><a href="#2、客户端配置" class="headerlink" title="2、客户端配置"></a>2、客户端配置</h3><p>下载windows的软件 <a href="https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_windows_amd64.zip" target="_blank" rel="noopener">https://github.com/fatedier/frp/releases/download/v0.37.1/frp_0.37.1_windows_amd64.zip</a></p>
+<p>解压后，编辑frpc.ini</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">[common]</span><br><span class="line">server_addr &#x3D; x.x.x.x</span><br><span class="line">server_port &#x3D; 7000</span><br><span class="line">token &#x3D;password</span><br><span class="line">[rdp]</span><br><span class="line">type &#x3D; tcp</span><br><span class="line">local_ip &#x3D; 127.0.0.1           </span><br><span class="line">local_port &#x3D; 3389</span><br><span class="line">remote_port &#x3D; 7001  </span><br><span class="line">[smb]</span><br><span class="line">type &#x3D; tcp</span><br><span class="line">local_ip &#x3D; 127.0.0.1</span><br><span class="line">local_port &#x3D; 445</span><br><span class="line">remote_port &#x3D; 7002</span><br><span class="line">[ssh]</span><br><span class="line">type &#x3D; tcp</span><br><span class="line">local_ip &#x3D; 127.0.0.1</span><br><span class="line">local_port &#x3D; 22</span><br><span class="line">remote_port &#x3D; 6000</span><br></pre></td></tr></table></figure>
+
+<p>运行程序：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">frpc.exe -c frpc.ini</span><br><span class="line">2021&#x2F;10&#x2F;03 09:04:45 [I] [service.go:304] [40e2c7f43a90b58d] login to server success, get run id [40e2c7f43a90b58d], server udp port [0]</span><br><span class="line">2021&#x2F;10&#x2F;03 09:04:45 [I] [proxy_manager.go:144] [40e2c7f43a90b58d] proxy added: [rdp smb ssh]</span><br><span class="line">2021&#x2F;10&#x2F;03 09:04:45 [I] [control.go:180] [40e2c7f43a90b58d] [rdp] start proxy success</span><br><span class="line">2021&#x2F;10&#x2F;03 09:04:45 [I] [control.go:180] [40e2c7f43a90b58d] [ssh] start proxy success</span><br><span class="line">2021&#x2F;10&#x2F;03 09:04:45 [I] [control.go:180] [40e2c7f43a90b58d] [smb] start proxy success</span><br></pre></td></tr></table></figure>
+
+<p>然后，外网通过vps-ip:7001即可访问该机器的rdp服务，通过vps-ip:6000可访问到该机器的ssh服务（根据你配置文件的端口）。</p>
+<p>（记得修改相应端口的防火墙策略！</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#条件："><span class="toc-number">1.</span> <span class="toc-text">条件：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#步骤"><span class="toc-number">2.</span> <span class="toc-text">步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、服务端配置"><span class="toc-number">2.1.</span> <span class="toc-text">1、服务端配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、客户端配置"><span class="toc-number">2.2.</span> <span class="toc-text">2、客户端配置</span></a></li></ol></li></ol>	
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
